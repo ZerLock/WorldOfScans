@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Select } from "@chakra-ui/react";
 import { numberToArray } from "../utils/utils";
 
