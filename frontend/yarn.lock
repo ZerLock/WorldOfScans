@@ -9173,6 +9173,11 @@ react-icons@^3.0.0:
   dependencies:
     camelcase "^5.0.0"
 
+react-ios-pwa-prompt@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/react-ios-pwa-prompt/-/react-ios-pwa-prompt-2.0.6.tgz#c1722b7a8b5b9c1700e730281756990b35c8b4d0"
+  integrity sha512-slRvFlcYsOL01D8gbJW4agOQ64pk7V+0EBk+d8z8wQ40vtcaoSw/JJkh+fJQrWSfWFVvZESu3FHP0+un4YUjJg==
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
