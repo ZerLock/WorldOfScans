@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Select } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
+import { ListItem } from '../components/ListItem';
 import { numberToArray } from "../utils/utils";
+import { DownloadIcon } from '@chakra-ui/icons';
 
 interface ChapterSelectorProps {
     nbChapters: number;
@@ -9,18 +11,26 @@ interface ChapterSelectorProps {
 }
 
 export const ChapterSelector = ({ nbChapters, onChange, children }: ChapterSelectorProps) => {
-    const goToChapter = (e: any) => {
-        onChange(e.target.value);
+    const downloadChapter = (chapter: number) => {
+        console.log('Download available soon...');
     };
 
     return (
         <>
-            {children}
-            <Select placeholder="Choisir un chapitre" onChange={goToChapter}>
-                {numberToArray(nbChapters).map((chapter, index) => (
-                    <option key={index} value={chapter}>Chapitre {chapter}</option>
-                ))}
-            </Select>
+            <VStack w="100%">
+                {children}
+                <VStack w="100%" overflowY="scroll">
+                    {numberToArray(nbChapters).map((chapter, index) => (
+                        <ListItem
+                            key={index}
+                            content={`Chapitre ${chapter}`}
+                            principal={() => onChange(chapter)}
+                            icon={<DownloadIcon />}
+                            secondary={() => downloadChapter(chapter)}
+                        />
+                    ))}
+                </VStack>
+            </VStack>
         </>
     );
 };

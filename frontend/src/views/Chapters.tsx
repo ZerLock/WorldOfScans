@@ -54,10 +54,20 @@ export const Chapters = () => {
                 <Topbar close={goToHome} content={manga} />
                 {nbChaters === 0 ? <>
                     <Spinner marginTop="32px" />
-                    <Text>Nous chargons les chapitres...</Text>
+                    <Text>Chargement des chapitres...</Text>
                 </> : <>
                     <ChapterSelector nbChapters={nbChaters} onChange={goToChapter}>
-                        {lastChapter > 0 ? <Button bgColor="transparent" w="100%" textDecoration="underline" fontStyle="italic" textColor="gray" onClick={goToLastChapter}>Reprendre au chapitre {lastChapter}</Button> : <></>}
+                        <Button
+                            isDisabled={lastChapter <= 0}
+                            bgColor="transparent"
+                            w="100%"
+                            textDecoration="underline"
+                            fontStyle="italic"
+                            textColor="gray"
+                            onClick={goToLastChapter}
+                        >
+                            {lastChapter > 0 ? `Reprendre au chapitre ${lastChapter}` : `Aucun chapitre n'a été commencé`}
+                        </Button>
                     </ChapterSelector>
                 </>}
             </VStack>
