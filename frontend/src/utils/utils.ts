@@ -1,15 +1,20 @@
-import { MIN_RESEARCH, MAX_RESEARCH, DEFAULT_CHAPTER_PAGE, ANIMESAMA_IMG_URL } from "./consts";
+import { MIN_RESEARCH, MAX_RESEARCH, DEFAULT_CHAPTER_PAGE, ANIMESAMA_IMG_URL, CHAPTER_KEEPER_KEY } from "./consts";
 
-export function pageUrl(manga: string, chapter: number, pageNumber: number): string {
+export const pageUrl = (manga: string, chapter: number, pageNumber: number): string => {
     return ANIMESAMA_IMG_URL
         .replace('$MANGA', manga)
         .replace('$CHAPTER', chapter.toString())
         .replace('$PAGE_NUMBER', pageNumber.toString());
-}
+};
+
+export const chapterKeeperKey = (manga: string): string => {
+    return CHAPTER_KEEPER_KEY
+        .replace('$MANGA', manga);
+};
 
 export const numberToArray = (nb: number): number[] => {
     return Array.from({ length: nb }, (_, i) => i + 1);
-}
+};
 
 export const validateImage = (imageUrl: string) => {
     return new Promise((resolve, reject) => {
@@ -19,11 +24,11 @@ export const validateImage = (imageUrl: string) => {
         img.onload = () => resolve(imageUrl);
         img.onerror = () => reject(imageUrl);
     });
-}
+};
 
 export const urlSpacesUnparser = (url: string): string => {
     return url.replaceAll('%20', ' ');
-}
+};
 
 export const findMaximumImageAvailable = async (manga: string, chapter?: number): Promise<number> => {
     let min = MIN_RESEARCH;

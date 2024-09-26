@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { APP_NAME, MANGAS } from "../utils/consts";
 
 import { urlSpacesUnparser } from "../utils/utils";
+
 export const App = () => {
     const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export const App = () => {
     };
 
     return (
-        <Box textAlign="center" fontSize="xl">
+        <Box textAlign="center" fontSize="xl" h="100%">
             <VStack>
                 <Heading>{APP_NAME}</Heading>
                 {MANGAS.map((manga, index) => (
