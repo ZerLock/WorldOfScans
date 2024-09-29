@@ -1,4 +1,4 @@
-import { MIN_RESEARCH, MAX_RESEARCH, DEFAULT_CHAPTER_PAGE, ANIMESAMA_IMG_URL, CHAPTER_KEEPER_KEY } from "./consts";
+import { MIN_RESEARCH, MAX_RESEARCH, DEFAULT_CHAPTER_PAGE, ANIMESAMA_IMG_URL, CHAPTER_KEEPER_KEY, MANGA_SAVED_KEY } from "./consts";
 
 export const pageUrl = (manga: string, chapter: number, pageNumber: number): string => {
     return ANIMESAMA_IMG_URL
@@ -10,6 +10,23 @@ export const pageUrl = (manga: string, chapter: number, pageNumber: number): str
 export const chapterKeeperKey = (manga: string): string => {
     return CHAPTER_KEEPER_KEY
         .replace('$MANGA', manga);
+};
+
+export const managSaved = (manga: string) => {
+    return MANGA_SAVED_KEY.replace('$MANGA', manga);
+};
+
+export const getSavedManga = (): string[] => {
+    const saved: string[] = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.endsWith(MANGA_SAVED_KEY.replace('$MANGA-', ''))) {
+            saved.push(key.split('-')[0]);
+        }
+    }
+
+    return saved;
 };
 
 export const numberToArray = (nb: number): number[] => {

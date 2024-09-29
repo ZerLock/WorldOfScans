@@ -1,6 +1,8 @@
 {
   "short_name": "WoS",
   "name": "World of Scans",
+  "description": "World of Scans is a free web / pwa application to easily read scans without nothing weird or bad on this website. By a reader, to readers. Enjoy 👋",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "favicon.ico",

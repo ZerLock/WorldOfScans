@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Button, HStack, IconButton, Text } from '@chakra-ui/react';
 
 interface ListItemProps {
-    content: string;
+    content: string | JSX.Element;
     icon?: JSX.Element;
     principal: () => void;
     secondary?: () => void;
@@ -16,7 +16,7 @@ export const ListItem = ({ content, icon, principal, secondary }: ListItemProps)
         <>
             <HStack w="100%" justify="space-between" px="10px">
                     <Button w="100%" bgColor="transparent" onClick={principal}>
-                        <Text w="100%" textAlign={hasSecondary ? 'start' : 'center'}>{content}</Text>
+                        <Text w="100%" textAlign={hasSecondary ? 'start' : 'center'} overflow="hidden">{content}</Text>
                     </Button>
                     {hasSecondary && <IconButton aria-label="action" mr="20px" icon={icon} onClick={secondary} />}
             </HStack>

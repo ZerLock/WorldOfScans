@@ -23,6 +23,10 @@ const router = createBrowserRouter([
         path: '/manga/:manga/chapter/:chapter',
         element: <Reader />,
     },
+    {
+        path: '/about',
+        element: <h1>Author: @ZerLock</h1>
+    }
 ]);
 
 export const Router = () => (
