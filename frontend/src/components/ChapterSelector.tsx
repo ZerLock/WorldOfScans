@@ -12,6 +12,9 @@ interface ChapterSelectorProps {
 
 export const ChapterSelector = ({ nbChapters, onChange, children }: ChapterSelectorProps) => {
     const downloadChapter = (chapter: number) => {
+        // @TODO : download chapter
+        // let image = await axios.get('http://aaa.bbb/image.png', {responseType: 'arraybuffer'});
+        // let returnedB64 = Buffer.from(image.data).toString('base64');
         console.log('Download available soon...');
     };
 

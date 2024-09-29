@@ -9,8 +9,8 @@ export const MIN_RESEARCH = 1;
 export const DEFAULT_CHAPTER_PAGE = 1;
 
 export const ANIMESAMA_IMG_URL = 'https://anime-sama.fr/s2/scans/$MANGA/$CHAPTER/$PAGE_NUMBER.jpg';
+export const ANIMESAMA_COVER_URL = 'https://cdn.statically.io/gh/Anime-Sama/IMG/img/contenu/$MANGA.jpg'
 
 export const CHAPTER_KEEPER_KEY = '$MANGA-CHAPTER-KEEPER';
 export const MANGA_SAVED_KEY = '$MANGA-SAVED';
 export const SHOW_ONLY_SAVED_KEY = 'SHOW_ONLY_SAVED';
-

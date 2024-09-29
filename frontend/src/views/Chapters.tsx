@@ -1,11 +1,12 @@
-import { Text, VStack, Spinner, Button } from "@chakra-ui/react";
+import * as React from 'react';
 import { useEffect, useMemo, useState } from "react";
+import { Text, VStack, Spinner, Button, Image } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChapterSelector } from "../components/ChapterSelector";
 import { fetchMangaData } from "../utils/api";
 import { Chapters as TChapters } from "../types/Chapters";
 import { getValue } from "../utils/storage";
-import { chapterKeeperKey } from "../utils/utils";
+import { chapterKeeperKey, coverUrl } from "../utils/utils";
 import { Topbar } from "../components/Topbar";
 
 export const Chapters = () => {
@@ -52,8 +53,9 @@ export const Chapters = () => {
         <>
             <VStack justifyContent="center">
                 <Topbar close={goToHome} content={manga} />
+                <Image src={coverUrl(manga)} maxH="250px" px="10px" borderRadius="16px" />
                 {nbChaters === 0 ? <>
-                    <Spinner marginTop="32px" />
+                    <Spinner marginTop="8px" />
                     <Text>Chargement des chapitres...</Text>
                 </> : <>
                     <ChapterSelector nbChapters={nbChaters} onChange={goToChapter}>
