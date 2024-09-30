@@ -9,7 +9,7 @@ import {
   Text,
   Input,
   InputGroup,
-  InputRightElement,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { APP_NAME, MANGAS, SHOW_ONLY_SAVED_KEY } from "../utils/consts";
@@ -18,6 +18,7 @@ import { ListItem } from "../components/ListItem";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { setValue } from "../utils/storage";
 import { Search2Icon } from "@chakra-ui/icons";
+import debounce from 'lodash.debounce';
 
 export const App = () => {
     const navigate = useNavigate();
@@ -33,6 +34,10 @@ export const App = () => {
         if (isShowOnlySaved) {
             setShowOnlySaved(isShowOnlySaved === "true");
         }
+
+        return () => {
+            debounceSearch.cancel();
+        };
     }, []);
 
     const goToChapterSelection = (manga: string) => {
@@ -58,6 +63,14 @@ export const App = () => {
     const isMangaSaved = (manga: string): boolean => {
         return savedManga.includes(manga);
     };
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
+
+    const debounceSearch = useMemo(() => {
+        return debounce(handleSearch, 500);
+    }, []);
 
     const mangaList = useMemo(() => {
         const beforeSearch = showOnlySaved ? MANGAS.filter(isMangaSaved) : MANGAS;
@@ -91,10 +104,10 @@ export const App = () => {
                 <Heading mt="50px">{APP_NAME}</Heading>
                 <VStack w="100%">
                     <InputGroup w="100%" px="20px">
-                        <Input colorScheme="teal" placeholder="Rechercher" value={search} onChange={(e) => setSearch(e.target.value)} />
-                        <InputRightElement mr="20px">
-                            <Search2Icon />
-                        </InputRightElement>
+                        <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                        <InputLeftElement ml="20px">
+                            <Search2Icon color="gray" />
+                        </InputLeftElement>
                     </InputGroup>
                     <HStack w="100%" px="30px" justify="space-between">
                         <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
