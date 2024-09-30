@@ -15,6 +15,32 @@ export const Reader = () => {
     const chapter = Number(params.chapter);
 
     useEffect(() => {
+        const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
+            let currentIndex = 0;
+
+            function loadNextBatch() {
+                let imagesLoaded = 0;
+
+                for (let i = 0; i < size && currentIndex < nbImages; i++) {
+                    const img = new Image();
+                    img.src = pageUrl(manga, chapter, currentIndex + 1);
+                    img.loading = 'lazy';
+
+                    img.onload = () => {
+                        imagesLoaded++;
+                        if (imagesLoaded === size) {
+                            loadNextBatch();
+                        }
+                    };
+
+                    container.appendChild(img);
+                    currentIndex++;
+                }
+            }
+
+            loadNextBatch();
+        };
+
         const bootstrap = async () => {
             const pagesContainer = document.getElementById('pages-container');
             if (!pagesContainer) {
@@ -25,13 +51,7 @@ export const Reader = () => {
             const res = await fetchMangaData(manga);
 
             pagesContainer.innerHTML = '';
-            res[chapter].forEach((_, index) => {
-                const img = new Image();
-                img.src = pageUrl(manga, chapter, index + 1);
-                img.loading = 'lazy';
-
-                pagesContainer.appendChild(img);
-            });
+            loadImagesInBatch(pagesContainer, res[chapter].length, 5);
         };
 
         setValue(chapterKeeperKey(manga), chapter);
