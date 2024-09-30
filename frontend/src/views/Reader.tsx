@@ -25,6 +25,8 @@ export const Reader = () => {
                     const img = new Image();
                     img.src = pageUrl(manga, chapter, currentIndex + 1);
                     img.loading = 'lazy';
+                    img.style.pointerEvents = 'none';
+                    img.style.userSelect = 'none';
 
                     img.onload = () => {
                         imagesLoaded++;
