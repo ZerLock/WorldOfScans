@@ -21,6 +21,7 @@ app.get('/manga/:mangaName', async (req, res) => {
     const response = await axios.get(url);
     res.json(response.data);
   } catch (error) {
+    console.log('error:' + error);
     res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
   }
 });
