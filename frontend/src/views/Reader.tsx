@@ -83,7 +83,7 @@ export const Reader = () => {
                         </PaginationSelector>
                     </Box>
                 </VStack>
-                <VStack w="100%" h="100%" id="pages-container" gap="24px"></VStack>
+                <VStack w="100%" h="100%" id="pages-container" gap="0px"></VStack>
                 <PaginationSelector prevDisabled={chapter <= 1} onPrev={goToPrevChapter} nextDisabled={false} onNext={goToNextChapter} />
             </VStack>
         </>
