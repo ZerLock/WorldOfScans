@@ -3,7 +3,7 @@ export const MANGAS = MANGAS_JSON;
 
 export const APP_NAME = 'World of Scans';
 
-export const SERVER_BASE_URL = 'https://backend-wos.leodubosclard.tech';
+export const SERVER_BASE_URL = 'https://wos-backend.vercel.app';
 
 export const MAX_PAGES = 100;
 export const MAX_RESEARCH = 2_000;
