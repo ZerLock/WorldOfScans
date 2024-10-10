@@ -3,7 +3,6 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-const port = 8080;
 
 app.use(cors());
 
@@ -26,6 +25,4 @@ app.get('/manga/:mangaName', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Le serveur tourne sur http://localhost:${port}`);
-});
+module.exports = app;
