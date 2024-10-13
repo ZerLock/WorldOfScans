@@ -46,7 +46,7 @@ export const Reader = () => {
         // };
 
         const bootstrap = async () => {
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.scrollTo(0, 0);
             // const pagesContainer = document.getElementById('pages-container');
             // if (!pagesContainer) {
             //     navigate(`/manga/${manga}/chapter`);
