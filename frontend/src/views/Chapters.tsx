@@ -8,6 +8,7 @@ import { Chapters as TChapters } from "../types/Chapters";
 import { getValue } from "../utils/storage";
 import { chapterKeeperKey, coverUrl } from "../utils/utils";
 import { Topbar } from "../components/Topbar";
+import { AppLayout } from '../components/AppLayout';
 
 export const Chapters = () => {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ export const Chapters = () => {
     const nbChaters = useMemo(() => Object.keys(chapters).length, [chapters]);
 
     return (
-        <>
+        <AppLayout>
             <VStack justifyContent="center">
                 <Topbar close={goToHome} content={manga} />
                 <Image src={coverUrl(manga)} maxH="250px" px="10px" borderRadius="16px" />
@@ -73,6 +74,6 @@ export const Chapters = () => {
                     </ChapterSelector>
                 </>}
             </VStack>
-        </>
+        </AppLayout>
     );
 };

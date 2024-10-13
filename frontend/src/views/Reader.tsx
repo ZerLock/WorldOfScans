@@ -8,6 +8,8 @@ import { fetchMangaData } from "../utils/api";
 import { setValue } from "../utils/storage";
 import { Topbar } from "../components/Topbar";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { AppLayout } from "../components/AppLayout";
+import { ReaderLayout } from "../components/ReaderLayout";
 
 export const Reader = () => {
     const navigate = useNavigate();
@@ -47,24 +49,28 @@ export const Reader = () => {
     return (
         <>
             <VStack justifyItems="center" gap="32px" marginBottom="0px">
-                <VStack gap="0px" w="100%">
-                    <Topbar close={goToChapterSelection} content={manga} />
-                    <Box marginTop="16px" w="100%" px="30px">
-                        <PaginationSelector prevDisabled={chapter <= 1} onPrev={goToPrevChapter} nextDisabled={false} onNext={goToNextChapter}>
-                            <Text fontSize="18px">Chapitre {chapter}</Text>
-                        </PaginationSelector>
-                    </Box>
-                </VStack>
-                <VStack w="100%" h="100%" gap="0px" id="pages-container">
-                    {numberToArray(nbPages).map((_, index) => (
-                        <LazyLoadImage
-                            key={index}
-                            height="100%"
-                            width="100%"
-                            src={pageUrl(manga, chapter, index + 1)}
-                        />
-                    ))}
-                </VStack>
+                <AppLayout>
+                    <VStack gap="0px" w="100%">
+                        <Topbar close={goToChapterSelection} content={manga} />
+                        <Box marginTop="16px" w="100%" px="30px">
+                            <PaginationSelector prevDisabled={chapter <= 1} onPrev={goToPrevChapter} nextDisabled={false} onNext={goToNextChapter}>
+                                <Text fontSize="18px">Chapitre {chapter}</Text>
+                            </PaginationSelector>
+                        </Box>
+                    </VStack>
+                </AppLayout>
+                <ReaderLayout>
+                    <VStack w="100%" h="100%" gap="0px" id="pages-container">
+                        {numberToArray(nbPages).map((_, index) => (
+                            <LazyLoadImage
+                                key={index}
+                                height="100%"
+                                width="100%"
+                                src={pageUrl(manga, chapter, index + 1)}
+                            />
+                        ))}
+                    </VStack>
+                </ReaderLayout>
                 <PaginationSelector
                     prevDisabled={chapter <= 1}
                     onPrev={goToPrevChapter}

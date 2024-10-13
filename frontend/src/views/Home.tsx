@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { APP_NAME, MANGAS, SHOW_ONLY_SAVED_KEY } from "../utils/consts";
 import { getSavedManga, managSaved, urlSpacesUnparser } from "../utils/utils";
 import { ListItem } from "../components/ListItem";
+import { AppLayout } from "../components/AppLayout";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { setValue } from "../utils/storage";
 import { Search2Icon } from "@chakra-ui/icons";
@@ -25,6 +26,14 @@ export const App = () => {
     const [savedManga, setSavedManga] = useState<string[]>([]);
     const [showOnlySaved, setShowOnlySaved] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
+
+    const debounceSearch = useMemo(() => {
+        return debounce(handleSearch, 500);
+    }, []);
 
     useEffect(() => {
         const tmp = getSavedManga();
@@ -38,7 +47,7 @@ export const App = () => {
         return () => {
             debounceSearch.cancel();
         };
-    }, []);
+    }, [debounceSearch]);
 
     const goToChapterSelection = (manga: string) => {
         navigate(`/manga/${manga}/chapter`);
@@ -60,17 +69,9 @@ export const App = () => {
         setValue<boolean>(SHOW_ONLY_SAVED_KEY, !showOnlySaved);
     };
 
-    const isMangaSaved = (manga: string): boolean => {
+    const isMangaSaved = React.useCallback((manga: string) => {
         return savedManga.includes(manga);
-    };
-
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
-    const debounceSearch = useMemo(() => {
-        return debounce(handleSearch, 500);
-    }, []);
+    }, [savedManga]);
 
     const mangaList = useMemo(() => {
         const beforeSearch = showOnlySaved ? MANGAS.filter(isMangaSaved) : MANGAS;
@@ -78,7 +79,7 @@ export const App = () => {
             return beforeSearch;
         }
         return beforeSearch.filter((manga) => manga.toLowerCase().includes(search.toLowerCase()));
-    }, [showOnlySaved, search]);
+    }, [showOnlySaved, search, isMangaSaved]);
 
     const boldSubstrInText = (text: string, substr: string): JSX.Element => {
         const textArray = text.split(RegExp(substr, "ig"));
@@ -99,37 +100,39 @@ export const App = () => {
     };
 
     return (
-        <Box textAlign="center" fontSize="xl" h="100%">
-            <VStack w="100%" px="10px" gap="24px">
-                <Heading mt="50px">{APP_NAME}</Heading>
-                <VStack w="100%">
-                    <InputGroup w="100%" px="20px">
-                        <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
-                        <InputLeftElement ml="20px">
-                            <Search2Icon color="gray" />
-                        </InputLeftElement>
-                    </InputGroup>
-                    <HStack w="100%" px="30px" justify="space-between">
-                        <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
-                        <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
-                    </HStack>
+        <AppLayout>
+            <Box textAlign="center" fontSize="xl" h="100%">
+                <VStack w="100%" px="10px" gap="24px">
+                    <Heading mt="50px">{APP_NAME}</Heading>
+                    <VStack w="100%">
+                        <InputGroup w="100%" px="20px">
+                            <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                            <InputLeftElement ml="20px">
+                                <Search2Icon color="gray" />
+                            </InputLeftElement>
+                        </InputGroup>
+                        <HStack w="100%" px="30px" justify="space-between">
+                            <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
+                            <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
+                        </HStack>
+                    </VStack>
+                    <VStack w="100%">
+                        {mangaList.length > 0 ? <>
+                            {mangaList.map((manga, index) => (
+                                <ListItem
+                                    key={index}
+                                    content={boldSubstrInText(urlSpacesUnparser(manga), search)}
+                                    principal={() => goToChapterSelection(manga)}
+                                    icon={isMangaSaved(manga) ? <FaHeart /> : <FaRegHeart />}
+                                    secondary={() => changeMangaSavedStatus(manga)}
+                                />
+                            ))}
+                        </> : <>
+                            <Text><b>"{search}"</b> not found...</Text>
+                        </>}
+                    </VStack>
                 </VStack>
-                <VStack w="100%" overflowY="scroll">
-                    {mangaList.length > 0 ? <>
-                        {mangaList.map((manga, index) => (
-                            <ListItem
-                                key={index}
-                                content={boldSubstrInText(urlSpacesUnparser(manga), search)}
-                                principal={() => goToChapterSelection(manga)}
-                                icon={isMangaSaved(manga) ? <FaHeart /> : <FaRegHeart />}
-                                secondary={() => changeMangaSavedStatus(manga)}
-                            />
-                        ))}
-                    </> : <>
-                        <Text><b>"{search}"</b> not found...</Text>
-                    </>}
-                </VStack>
-            </VStack>
-        </Box>
+            </Box>
+        </AppLayout>
       );
 };
