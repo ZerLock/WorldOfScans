@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { APP_NAME, MANGAS, SHOW_ONLY_SAVED_KEY } from "../utils/consts";
-import { getSavedManga, managSaved, urlSpacesUnparser } from "../utils/utils";
+import { getFinishedManga, getSavedManga, managSaved, mangaFinished, urlSpacesUnparser } from "../utils/utils";
 import { ListItem } from "../components/ListItem";
 import { AppLayout } from "../components/AppLayout";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
@@ -24,6 +24,7 @@ import debounce from 'lodash.debounce';
 export const App = () => {
     const navigate = useNavigate();
     const [savedManga, setSavedManga] = useState<string[]>([]);
+    const [finishedManga, setFinishedManga] = useState<string[]>([]);
     const [showOnlySaved, setShowOnlySaved] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
 
@@ -38,6 +39,9 @@ export const App = () => {
     useEffect(() => {
         const tmp = getSavedManga();
         setSavedManga(tmp);
+
+        const tmp2 = getFinishedManga();
+        setFinishedManga(tmp2);
 
         const isShowOnlySaved = localStorage.getItem(SHOW_ONLY_SAVED_KEY);
         if (isShowOnlySaved) {
@@ -73,6 +77,10 @@ export const App = () => {
         return savedManga.includes(manga);
     }, [savedManga]);
 
+    const isMangaFinished = React.useCallback((manga: string) => {
+        return finishedManga.includes(manga);
+    }, [finishedManga]);
+
     const mangaList = useMemo(() => {
         const beforeSearch = showOnlySaved ? MANGAS.filter(isMangaSaved) : MANGAS;
         if (!search) {
@@ -87,6 +95,7 @@ export const App = () => {
 
         return (
             <span>
+                {isMangaFinished(text) && '✅ '}
                 {textArray.map((item, index) => (
                     <span key={`${item}-${index}`}>
                         {item}

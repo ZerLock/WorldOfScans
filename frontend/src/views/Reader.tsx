@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { VStack, Text, Box } from "@chakra-ui/react";
-import { chapterKeeperKey, numberToArray, pageUrl } from "../utils/utils";
+import { chapterKeeperKey, mangaFinished, numberToArray, pageUrl } from "../utils/utils";
 import { PaginationSelector } from "../components/PaginationSelector";
 import { fetchMangaData } from "../utils/api";
 import { setValue } from "../utils/storage";
@@ -10,24 +10,27 @@ import { Topbar } from "../components/Topbar";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AppLayout } from "../components/AppLayout";
 import { ReaderLayout } from "../components/ReaderLayout";
+import { Chapters as TChapters } from "../types/Chapters";
 
 export const Reader = () => {
     const navigate = useNavigate();
     const params = useParams();
-    const [nbPages, setNbPages] = React.useState<number>(0);
+    const [nbPages, setNbPages] = useState<number>(0);
+    const [chapters, setChapters] = useState<TChapters>({});
     const manga = params.manga || '';
     const chapter = Number(params.chapter);
 
     useEffect(() => {
         const bootstrap = async () => {
-            const pagesContainer = document.getElementById('pages-container');
-            if (pagesContainer) {
-                pagesContainer.innerHTML = '';
-            }
             window.scrollTo(0, 0);
 
             const res = await fetchMangaData(manga);
             setNbPages(res[chapter].length);
+            setChapters(res);
+
+            if (!chapters[chapter + 1]) {
+                localStorage.setItem(mangaFinished(manga), 'true');
+            }
         };
 
         setValue(chapterKeeperKey(manga), chapter);
@@ -53,7 +56,11 @@ export const Reader = () => {
                     <VStack gap="0px" w="100%">
                         <Topbar close={goToChapterSelection} content={manga} />
                         <Box marginTop="16px" w="100%" px="30px">
-                            <PaginationSelector prevDisabled={chapter <= 1} onPrev={goToPrevChapter} nextDisabled={false} onNext={goToNextChapter}>
+                            <PaginationSelector
+                                prevDisabled={chapter <= 1}
+                                onPrev={goToPrevChapter}
+                                nextDisabled={!chapters[chapter + 1]}
+                                onNext={goToNextChapter}>
                                 <Text fontSize="18px">Chapitre {chapter}</Text>
                             </PaginationSelector>
                         </Box>
@@ -74,7 +81,7 @@ export const Reader = () => {
                 <PaginationSelector
                     prevDisabled={chapter <= 1}
                     onPrev={goToPrevChapter}
-                    nextDisabled={false}
+                    nextDisabled={!chapters[chapter + 1]}
                     onNext={goToNextChapter}
                 />
             </VStack>
