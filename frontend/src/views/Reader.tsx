@@ -2,58 +2,61 @@ import * as React from "react";
 import { useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { VStack, Text, Box } from "@chakra-ui/react";
-import { chapterKeeperKey, pageUrl } from "../utils/utils";
+import { chapterKeeperKey, numberToArray, pageUrl } from "../utils/utils";
 import { PaginationSelector } from "../components/PaginationSelector";
 import { fetchMangaData } from "../utils/api";
 import { setValue } from "../utils/storage";
 import { Topbar } from "../components/Topbar";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export const Reader = () => {
     const navigate = useNavigate();
     const params = useParams();
+    const [nbPages, setNbPages] = React.useState<number>(0);
     const manga = params.manga || '';
     const chapter = Number(params.chapter);
 
     useEffect(() => {
-        const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
-            let currentIndex = 0;
+        // const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
+        //     let currentIndex = 0;
 
-            function loadNextBatch() {
-                let imagesLoaded = 0;
+        //     function loadNextBatch() {
+        //         let imagesLoaded = 0;
 
-                for (let i = 0; i < size && currentIndex < nbImages; i++) {
-                    const img = new Image();
-                    img.src = pageUrl(manga, chapter, currentIndex + 1);
-                    img.loading = 'lazy';
-                    img.style.pointerEvents = 'none';
-                    img.style.userSelect = 'none';
+        //         for (let i = 0; i < size && currentIndex < nbImages; i++) {
+        //             const img = new Image();
+        //             img.src = pageUrl(manga, chapter, currentIndex + 1);
+        //             img.loading = 'lazy';
+        //             img.style.pointerEvents = 'none';
+        //             img.style.userSelect = 'none';
 
-                    img.onload = () => {
-                        imagesLoaded++;
-                        if (imagesLoaded === size) {
-                            loadNextBatch();
-                        }
-                    };
+        //             img.onload = () => {
+        //                 imagesLoaded++;
+        //                 if (imagesLoaded === size) {
+        //                     loadNextBatch();
+        //                 }
+        //             };
 
-                    container.appendChild(img);
-                    currentIndex++;
-                }
-            }
+        //             container.appendChild(img);
+        //             currentIndex++;
+        //         }
+        //     }
 
-            loadNextBatch();
-        };
+        //     loadNextBatch();
+        // };
 
         const bootstrap = async () => {
-            const pagesContainer = document.getElementById('pages-container');
-            if (!pagesContainer) {
-                navigate(`/manga/${manga}/chapter`);
-                return;
-            }
+            // const pagesContainer = document.getElementById('pages-container');
+            // if (!pagesContainer) {
+            //     navigate(`/manga/${manga}/chapter`);
+            //     return;
+            // }
 
             const res = await fetchMangaData(manga);
+            setNbPages(res[chapter].length);
 
-            pagesContainer.innerHTML = '';
-            loadImagesInBatch(pagesContainer, res[chapter].length, 5);
+            // pagesContainer.innerHTML = '';
+            // loadImagesInBatch(pagesContainer, res[chapter].length, 5);
         };
 
         setValue(chapterKeeperKey(manga), chapter);
@@ -83,7 +86,17 @@ export const Reader = () => {
                         </PaginationSelector>
                     </Box>
                 </VStack>
-                <VStack w="100%" h="100%" id="pages-container" gap="0px"></VStack>
+                {/* <VStack w="100%" h="100%" id="pages-container" gap="0px"></VStack> */}
+                <VStack w="100%" h="100%" gap="0px">
+                    {numberToArray(nbPages).map((_, index) => (
+                        <LazyLoadImage
+                            key={index}
+                            height="100%"
+                            width="100%"
+                            src={pageUrl(manga, chapter, index + 1)}
+                        />
+                    ))}
+                </VStack>
                 <PaginationSelector prevDisabled={chapter <= 1} onPrev={goToPrevChapter} nextDisabled={false} onNext={goToNextChapter} />
             </VStack>
         </>
