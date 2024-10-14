@@ -10,15 +10,17 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { APP_NAME, MANGAS, SHOW_ONLY_SAVED_KEY } from "../utils/consts";
-import { getFinishedManga, getSavedManga, managSaved, mangaFinished, urlSpacesUnparser } from "../utils/utils";
+import { getFinishedManga, getSavedManga, managSaved, urlSpacesUnparser } from "../utils/utils";
 import { ListItem } from "../components/ListItem";
 import { AppLayout } from "../components/AppLayout";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { setValue } from "../utils/storage";
-import { Search2Icon } from "@chakra-ui/icons";
+import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
 import debounce from 'lodash.debounce';
 
 export const App = () => {
@@ -82,7 +84,7 @@ export const App = () => {
     }, [finishedManga]);
 
     const mangaList = useMemo(() => {
-        const beforeSearch = showOnlySaved ? MANGAS.filter(isMangaSaved) : MANGAS;
+        const beforeSearch = showOnlySaved ? Object.keys(MANGAS).filter(isMangaSaved) : Object.keys(MANGAS);
         if (!search) {
             return beforeSearch;
         }
@@ -115,10 +117,23 @@ export const App = () => {
                     <Heading mt="50px">{APP_NAME}</Heading>
                     <VStack w="100%">
                         <InputGroup w="100%" px="20px">
-                            <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
                             <InputLeftElement ml="20px">
                                 <Search2Icon color="gray" />
                             </InputLeftElement>
+                            <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                            <InputRightElement>
+                                <IconButton
+                                    aria-label="clear search"
+                                    backgroundColor="transparent"
+                                    mr="40px"
+                                    icon={<CloseIcon />}
+                                    _hover={{
+                                        backgroundColor: 'transparent',
+                                        color: 'red.500',
+                                    }}
+                                    onClick={() => setSearch('')}
+                                />
+                            </InputRightElement>
                         </InputGroup>
                         <HStack w="100%" px="30px" justify="space-between">
                             <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>

@@ -20,7 +20,7 @@ root.render(
                 timesToShow={3}
                 copyAddToHomeScreenStep="Sur l'écran d'accueil"
             />
-        </React.StrictMode>,
+        </React.StrictMode>
     </>
 );
 

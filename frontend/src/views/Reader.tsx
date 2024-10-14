@@ -70,6 +70,7 @@ export const Reader = () => {
                         {numberToArray(nbPages).map((_, index) => (
                             <img
                                 src={pageUrl(manga, chapter, index + 1)}
+                                alt={`Page ${index + 1} chapitre ${chapter}`}
                                 loading="lazy"
                                 width="100%"
                                 height="100%"
