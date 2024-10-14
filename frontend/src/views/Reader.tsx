@@ -7,7 +7,6 @@ import { PaginationSelector } from "../components/PaginationSelector";
 import { fetchMangaData } from "../utils/api";
 import { setValue } from "../utils/storage";
 import { Topbar } from "../components/Topbar";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AppLayout } from "../components/AppLayout";
 import { ReaderLayout } from "../components/ReaderLayout";
 import { Chapters as TChapters } from "../types/Chapters";
@@ -69,11 +68,11 @@ export const Reader = () => {
                 <ReaderLayout>
                     <VStack w="100%" h="100%" gap="0px" id="pages-container">
                         {numberToArray(nbPages).map((_, index) => (
-                            <LazyLoadImage
-                                key={index}
-                                height="100%"
-                                width="100%"
+                            <img
                                 src={pageUrl(manga, chapter, index + 1)}
+                                loading="lazy"
+                                width="100%"
+                                height="100%"
                             />
                         ))}
                     </VStack>
