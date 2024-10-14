@@ -1,4 +1,4 @@
-import { ChakraProvider, theme } from "@chakra-ui/react";
+import { Box, ChakraProvider, theme } from "@chakra-ui/react";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Router } from "./Router";
@@ -13,8 +13,10 @@ root.render(
     <>
         <React.StrictMode>
             <ChakraProvider theme={theme}>
-                <Router />
-                <PWAInstallator />
+                <Box mb="30px">
+                    <Router />
+                    <PWAInstallator />
+                </Box>
             </ChakraProvider>
         </React.StrictMode>
     </>
