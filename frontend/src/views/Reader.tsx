@@ -28,7 +28,7 @@ export const Reader = () => {
             setNbPages(res[chapter].length);
             setChapters(res);
 
-            if (!chapters[chapter + 1]) {
+            if (!res[chapter + 1]) {
                 localStorage.setItem(mangaFinished(manga), 'true');
             }
         };
