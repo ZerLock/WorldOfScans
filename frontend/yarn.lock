@@ -9050,6 +9050,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
+pwa-install-handler@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/pwa-install-handler/-/pwa-install-handler-2.6.1.tgz#1d70b7bea1fbdc4b21477dcf84630050b0338ffd"
+  integrity sha512-WwIkMPZZj8cYimM48rcjY891dEkhUtPgNbVhbAuyz5MubDuxgZQMSNK/eEpyA3/GMmubY/4x2aN00lcYSuLglw==
+
 q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
@@ -9315,6 +9320,13 @@ react-style-singleton@^2.2.1:
     get-nonce "^1.0.0"
     invariant "^2.2.4"
     tslib "^2.0.0"
+
+react-use-pwa-install@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-use-pwa-install/-/react-use-pwa-install-1.0.2.tgz#e69af842307ccbbb6aadc4946b8a53b6e2ccf65c"
+  integrity sha512-MNgyULK+LdBHEkL5t1raxlEkfzEsJ1EcZZTppCaNRplY13Xg3P9F8PyS8roDUj1tVqfXfFtHxAUGXy9L9JsTWw==
+  dependencies:
+    pwa-install-handler "^2.6.1"
 
 react@^18.1.0:
   version "18.3.1"
