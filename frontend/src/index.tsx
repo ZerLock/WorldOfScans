@@ -3,7 +3,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Router } from "./Router";
 import * as serviceWorker from './serviceWorker';
-import { PWAInstallator } from "./components/PWAInstallator";
+import { PWA } from "./components/PWA";
+import ReactPWAInstallProvider from './libs/pwa';
 
 const container = document.getElementById("root");
 if (!container) throw new Error('Failed to find the root element');
@@ -13,10 +14,12 @@ root.render(
     <>
         <React.StrictMode>
             <ChakraProvider theme={theme}>
-                <Box mb="30px">
-                    <Router />
-                    <PWAInstallator />
-                </Box>
+                <ReactPWAInstallProvider enableLogging>
+                    <Box mb="30px">
+                        <Router />
+                        <PWA />
+                    </Box>
+                </ReactPWAInstallProvider>
             </ChakraProvider>
         </React.StrictMode>
     </>

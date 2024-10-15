@@ -77,7 +77,7 @@ export const Chapters = () => {
                         <RadioGroup w="100%" value={selectedLang} onChange={setSelectedLang}>
                             <HStack justify="space-around">
                                 {LANG.map((lang) => (
-                                    <Radio value={lang} isDisabled={isLangDisabled(lang)}>{lang}</Radio>
+                                    <Radio key={lang} value={lang} isDisabled={isLangDisabled(lang)}>{lang}</Radio>
                                 ))}
                             </HStack>
                         </RadioGroup>
@@ -88,7 +88,7 @@ export const Chapters = () => {
                             onChange={(e) => setSelectedChapter(Number(e.target.value))}
                         >
                             {numberToArray(nbChaters).map((chapitre) => (
-                                <option value={chapitre}>Chapitre {chapitre}</option>
+                                <option key={chapitre} value={chapitre}>Chapitre {chapitre}</option>
                             ))}
                         </Select>
                         <Button

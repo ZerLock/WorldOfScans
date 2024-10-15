@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { VStack, Text, Box } from "@chakra-ui/react";
-import { chapterKeeperKey, mangaFinished, numberToArray, pageUrl } from "../utils/utils";
+import { chapterKeeperKey, mangaFinished, pageUrl } from "../utils/utils";
 import { PaginationSelector } from "../components/PaginationSelector";
 import { fetchMangaData } from "../utils/api";
 import { setValue } from "../utils/storage";
@@ -14,22 +14,62 @@ import { Chapters as TChapters } from "../types/Chapters";
 export const Reader = () => {
     const navigate = useNavigate();
     const params = useParams();
-    const [nbPages, setNbPages] = useState<number>(0);
     const [chapters, setChapters] = useState<TChapters>({});
     const manga = params.manga || '';
     const chapter = Number(params.chapter);
 
     useEffect(() => {
+        const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
+            if (container.innerHTML !== '') {
+                return;
+            }
+
+            let currentIndex = 0;
+
+            function loadNextBatch() {
+                let imagesLoaded = 0;
+
+                for (let i = 0; i < size && currentIndex < nbImages; i++) {
+                    const img = new Image();
+                    img.src = pageUrl(manga, chapter, currentIndex + 1);
+                    img.loading = 'lazy';
+                    img.style.pointerEvents = 'none';
+                    img.style.userSelect = 'none';
+
+                    img.onload = () => {
+                        imagesLoaded++;
+                        if (imagesLoaded === size) {
+                            loadNextBatch();
+                        }
+                    };
+
+                    console.log('loading page:', currentIndex + 1);
+                    container.appendChild(img);
+                    currentIndex++;
+                }
+            }
+
+            loadNextBatch();
+        };
+
         const bootstrap = async () => {
             window.scrollTo(0, 0);
+            const pagesContainer = document.getElementById('pages-container');
+            if (!pagesContainer) {
+                navigate(`/manga/${manga}/chapter`);
+                return;
+            }
+
+            pagesContainer.innerHTML = '';
 
             const res = await fetchMangaData(manga);
-            setNbPages(res[chapter].length);
             setChapters(res);
 
             if (!res[chapter + 1]) {
                 localStorage.setItem(mangaFinished(manga), 'true');
             }
+
+            loadImagesInBatch(pagesContainer, res[chapter].length, 5);
         };
 
         setValue(chapterKeeperKey(manga), chapter);
@@ -66,17 +106,7 @@ export const Reader = () => {
                     </VStack>
                 </AppLayout>
                 <ReaderLayout>
-                    <VStack w="100%" h="100%" gap="0px" id="pages-container">
-                        {numberToArray(nbPages).map((_, index) => (
-                            <img
-                                src={pageUrl(manga, chapter, index + 1)}
-                                alt={`Page ${index + 1} chapitre ${chapter}`}
-                                loading="lazy"
-                                width="100%"
-                                height="100%"
-                            />
-                        ))}
-                    </VStack>
+                    <VStack w="100%" h="100%" gap="0px" id="pages-container"></VStack>
                 </ReaderLayout>
                 <PaginationSelector
                     prevDisabled={chapter <= 1}

@@ -75,6 +75,15 @@ export const App = () => {
         setValue<boolean>(SHOW_ONLY_SAVED_KEY, !showOnlySaved);
     };
 
+    const clearSearch = () => {
+        setSearch('');
+        const el = document.getElementById('search-input');
+        if (el) {
+            //@ts-ignore
+            el.value = '';
+        }
+    }
+
     const isMangaSaved = React.useCallback((manga: string) => {
         return savedManga.includes(manga);
     }, [savedManga]);
@@ -120,20 +129,22 @@ export const App = () => {
                             <InputLeftElement ml="20px">
                                 <Search2Icon color="gray" />
                             </InputLeftElement>
-                            <Input colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
-                            <InputRightElement>
-                                <IconButton
-                                    aria-label="clear search"
-                                    backgroundColor="transparent"
-                                    mr="40px"
-                                    icon={<CloseIcon />}
-                                    _hover={{
-                                        backgroundColor: 'transparent',
-                                        color: 'red.500',
-                                    }}
-                                    onClick={() => setSearch('')}
-                                />
-                            </InputRightElement>
+                            <Input id="search-input" colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                            {search && <>
+                                <InputRightElement>
+                                    <IconButton
+                                        aria-label="clear search"
+                                        backgroundColor="transparent"
+                                        mr="40px"
+                                        icon={<CloseIcon />}
+                                        _hover={{
+                                            backgroundColor: 'transparent',
+                                            color: 'red.500',
+                                        }}
+                                        onClick={clearSearch}
+                                    />
+                                </InputRightElement>
+                            </>}
                         </InputGroup>
                         <HStack w="100%" px="30px" justify="space-between">
                             <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
@@ -158,5 +169,5 @@ export const App = () => {
                 </VStack>
             </Box>
         </AppLayout>
-      );
+    );
 };
