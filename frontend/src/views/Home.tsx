@@ -151,7 +151,7 @@ export const App = () => {
                             <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
                         </HStack>
                     </VStack>
-                    <VStack w="100%">
+                    <VStack w="100%" overflowY="scroll" maxH="71vh">
                         {mangaList.length > 0 ? <>
                             {mangaList.map((manga, index) => (
                                 <ListItem
