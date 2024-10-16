@@ -5,10 +5,14 @@ import { Router } from "./Router";
 import * as serviceWorker from './serviceWorker';
 import { PWA } from "./components/PWA";
 import ReactPWAInstallProvider from './libs/pwa';
+import { EngineContext } from "./libs/engine/EngineContext";
+import { AnimeSamaEngine } from "./libs/engine/AnimeSamaEngine";
 
 const container = document.getElementById("root");
 if (!container) throw new Error('Failed to find the root element');
 const root = ReactDOM.createRoot(container);
+
+EngineContext.setEngine(new AnimeSamaEngine());
 
 root.render(
     <>

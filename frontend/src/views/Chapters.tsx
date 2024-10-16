@@ -1,32 +1,31 @@
-import * as React from 'react';
-import { useEffect, useMemo, useState } from "react";
+import React from 'react';
+import { useEffect, useState } from "react";
 import { Text, VStack, Spinner, Button, Image, Select, RadioGroup, HStack, Radio } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchMangaData } from "../utils/api";
-import { Chapters as TChapters } from "../types/Chapters";
 import { getValue } from "../utils/storage";
-import { chapterKeeperKey, coverUrl, numberToArray, urlSpacesUnparser } from "../utils/utils";
+import utils from "../utils/utils";
 import { Topbar } from "../components/Topbar";
 import { AppLayout } from '../components/AppLayout';
-import { LANG, MANGAS } from '../utils/consts';
+import consts from '../utils/consts';
 import { TextEllipsis } from '../components/TextEllipsis';
+import { EngineContext } from '../libs/engine/EngineContext';
 
 export const Chapters = () => {
     const navigate = useNavigate();
     const params = useParams();
-    const [chapters, setChapters] = useState<TChapters>({});
+    const [nbChapters, setNbChapters] = useState<number>(0);
     const [selectedChapter, setSelectedChapter] = useState<number | undefined>(undefined);
     const [selectedLang, setSelectedLang] = useState<string>('fr');
     const manga = params.manga || '';
 
     useEffect(() => {
         const bootstrap = async () => {
-            const res = await fetchMangaData(manga);
-            setChapters(res);
+            const tmp = await EngineContext.getNbChapters(manga);
+            setNbChapters(tmp);
         };
 
         const getLastChapter = () => {
-            const chapter = getValue<number>(chapterKeeperKey(manga));
+            const chapter = getValue<number>(utils.keys.chapterKeeperKey(manga));
             if (chapter) {
                 setSelectedChapter(chapter);
             }
@@ -50,14 +49,12 @@ export const Chapters = () => {
         return lang !== 'fr';
     };
 
-    const nbChaters = useMemo(() => Object.keys(chapters).length, [chapters]);
-
     return (
         <AppLayout>
             <VStack justifyContent="center">
                 <Topbar close={goToHome} content={manga} />
-                <Image src={coverUrl(manga)} maxH="250px" px="10px" borderRadius="16px" />
-                <TextEllipsis text={(MANGAS as { [key: string]: string })[urlSpacesUnparser(manga)]} />
+                <Image src={EngineContext.getCoverUrl(manga)} maxH="250px" px="10px" borderRadius="16px" />
+                <TextEllipsis text={(consts.MANGAS as { [key: string]: string })[manga]} />
                 <Text
                     w="100%"
                     px="10px"
@@ -69,14 +66,14 @@ export const Chapters = () => {
                 >
                     Chapitres
                 </Text>
-                {nbChaters === 0 ? <>
+                {nbChapters === 0 ? <>
                     <Spinner mt="32px" />
                     <Text>Chargement des chapitres...</Text>
                 </> : <>
                     <VStack w="100%" px="20px" mt="12px" gap="16px">
                         <RadioGroup w="100%" value={selectedLang} onChange={setSelectedLang}>
                             <HStack justify="space-around">
-                                {LANG.map((lang) => (
+                                {consts.LANG.map((lang) => (
                                     <Radio key={lang} value={lang} isDisabled={isLangDisabled(lang)}>{lang}</Radio>
                                 ))}
                             </HStack>
@@ -87,7 +84,7 @@ export const Chapters = () => {
                             value={selectedChapter}
                             onChange={(e) => setSelectedChapter(Number(e.target.value))}
                         >
-                            {numberToArray(nbChaters).map((chapitre) => (
+                            {utils.numberToArray(nbChapters).map((chapitre) => (
                                 <option key={chapitre} value={chapitre}>Chapitre {chapitre}</option>
                             ))}
                         </Select>
