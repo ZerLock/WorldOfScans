@@ -11,7 +11,7 @@ export const PWA = () => {
         if (supported() && !isInstalled()) {
             pwaInstall({
                 title: consts.APP_NAME,
-                description: "Installez cette application pour une meilleur experience",
+                description: "Installez cette application pour une meilleure experience",
                 logo: Logo,
             }).then(() => {}).catch(() => {});
         }
