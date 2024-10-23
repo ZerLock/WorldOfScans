@@ -22,6 +22,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { setValue } from "../utils/storage";
 import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
 import debounce from 'lodash.debounce';
+import { Analytics } from "@vercel/analytics/react";
 
 export const App = () => {
     const navigate = useNavigate();
@@ -122,54 +123,57 @@ export const App = () => {
     };
 
     return (
-        <AppLayout>
-            <Box textAlign="center" fontSize="xl" h="100%">
-                <VStack w="100%" px="10px" gap="24px">
-                    <Heading mt="50px">{consts.APP_NAME}</Heading>
-                    <VStack w="100%">
-                        <InputGroup w="100%" px="20px">
-                            <InputLeftElement ml="20px">
-                                <Search2Icon color="gray" />
-                            </InputLeftElement>
-                            <Input id="search-input" colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
-                            {search && <>
-                                <InputRightElement>
-                                    <IconButton
-                                        aria-label="clear search"
-                                        backgroundColor="transparent"
-                                        mr="40px"
-                                        icon={<CloseIcon />}
-                                        _hover={{
-                                            backgroundColor: 'transparent',
-                                            color: 'red.500',
-                                        }}
-                                        onClick={clearSearch}
+        <>
+            <Analytics />
+            <AppLayout>
+                <Box textAlign="center" fontSize="xl" h="100%">
+                    <VStack w="100%" px="10px" gap="24px">
+                        <Heading mt="50px">{consts.APP_NAME}</Heading>
+                        <VStack w="100%">
+                            <InputGroup w="100%" px="20px">
+                                <InputLeftElement ml="20px">
+                                    <Search2Icon color="gray" />
+                                </InputLeftElement>
+                                <Input id="search-input" colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                                {search && <>
+                                    <InputRightElement>
+                                        <IconButton
+                                            aria-label="clear search"
+                                            backgroundColor="transparent"
+                                            mr="40px"
+                                            icon={<CloseIcon />}
+                                            _hover={{
+                                                backgroundColor: 'transparent',
+                                                color: 'red.500',
+                                            }}
+                                            onClick={clearSearch}
+                                        />
+                                    </InputRightElement>
+                                </>}
+                            </InputGroup>
+                            <HStack w="100%" px="30px" justify="space-between">
+                                <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
+                                <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
+                            </HStack>
+                        </VStack>
+                        <VStack w="100%" overflowY="scroll" maxH="71vh">
+                            {mangaList.length > 0 ? <>
+                                {mangaList.map((manga, index) => (
+                                    <ListItem
+                                        key={index}
+                                        content={boldSubstrInText(manga, search)}
+                                        principal={() => goToChapterSelection(manga)}
+                                        icon={isMangaSaved(manga) ? <FaHeart /> : <FaRegHeart />}
+                                        secondary={() => changeMangaSavedStatus(manga)}
                                     />
-                                </InputRightElement>
+                                ))}
+                            </> : <>
+                                <Text><b>"{search}"</b> not found...</Text>
                             </>}
-                        </InputGroup>
-                        <HStack w="100%" px="30px" justify="space-between">
-                            <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
-                            <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
-                        </HStack>
+                        </VStack>
                     </VStack>
-                    <VStack w="100%" overflowY="scroll" maxH="71vh">
-                        {mangaList.length > 0 ? <>
-                            {mangaList.map((manga, index) => (
-                                <ListItem
-                                    key={index}
-                                    content={boldSubstrInText(manga, search)}
-                                    principal={() => goToChapterSelection(manga)}
-                                    icon={isMangaSaved(manga) ? <FaHeart /> : <FaRegHeart />}
-                                    secondary={() => changeMangaSavedStatus(manga)}
-                                />
-                            ))}
-                        </> : <>
-                            <Text><b>"{search}"</b> not found...</Text>
-                        </>}
-                    </VStack>
-                </VStack>
-            </Box>
-        </AppLayout>
+                </Box>
+            </AppLayout>
+        </>
     );
 };
