@@ -7,7 +7,6 @@ import { PWA } from "./components/PWA";
 import ReactPWAInstallProvider from './libs/pwa';
 import { EngineContext } from "./libs/engine/EngineContext";
 import { AnimeSamaEngine } from "./libs/engine/AnimeSamaEngine";
-import { Analytics } from "@vercel/analytics/react"
 
 const container = document.getElementById("root");
 if (!container) throw new Error('Failed to find the root element');
@@ -26,7 +25,6 @@ root.render(
                     </Box>
                 </ReactPWAInstallProvider>
             </ChakraProvider>
-            <Analytics />
         </React.StrictMode>
     </>
 );
