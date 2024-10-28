@@ -46,10 +46,10 @@ export const TextEllipsis = ({ text, maxChars = 200 }: TextEllipsisProps) => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader mb="10px"></ModalHeader>
+                    <ModalHeader></ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Text textAlign="justify">{text}</Text>
+                        <Text textAlign="justify" maxH="50vh" overflowY="scroll" mt="20px">{text}</Text>
                     </ModalBody>
                     <ModalFooter>
                     </ModalFooter>
