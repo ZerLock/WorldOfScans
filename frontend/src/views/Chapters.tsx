@@ -80,7 +80,7 @@ export const Chapters = () => {
                         </RadioGroup>
                         <Select
                             placeholder="Chapitres"
-                            colorScheme="teal"
+                            colorScheme="blue"
                             value={selectedChapter}
                             onChange={(e) => setSelectedChapter(Number(e.target.value))}
                         >
@@ -90,7 +90,7 @@ export const Chapters = () => {
                         </Select>
                         <Button
                             w="100%"
-                            colorScheme="teal"
+                            colorScheme="blue"
                             isDisabled={!selectedChapter || isLangDisabled(selectedLang)}
                             onClick={goToChapter}
                         >
