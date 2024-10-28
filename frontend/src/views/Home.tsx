@@ -3,7 +3,6 @@ import { useMemo, useState, useEffect } from 'react';
 import {
   Box,
   VStack,
-  Heading,
   Switch,
   HStack,
   Text,
@@ -23,6 +22,7 @@ import { setValue } from "../utils/storage";
 import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
 import debounce from 'lodash.debounce';
 import { Analytics } from "@vercel/analytics/react";
+import { HomeTopbar } from "../components/HomeTopbar";
 
 export const App = () => {
     const navigate = useNavigate();
@@ -128,13 +128,13 @@ export const App = () => {
             <AppLayout>
                 <Box textAlign="center" fontSize="xl" h="100%">
                     <VStack w="100%" px="10px" gap="24px">
-                        <Heading mt="50px">{consts.APP_NAME}</Heading>
+                        <HomeTopbar />
                         <VStack w="100%">
                             <InputGroup w="100%" px="20px">
                                 <InputLeftElement ml="20px">
                                     <Search2Icon color="gray" />
                                 </InputLeftElement>
-                                <Input id="search-input" colorScheme="teal" placeholder="Rechercher" onChange={debounceSearch} />
+                                <Input id="search-input" colorScheme="blue" placeholder="Rechercher" onChange={debounceSearch} />
                                 {search && <>
                                     <InputRightElement>
                                         <IconButton
@@ -153,7 +153,7 @@ export const App = () => {
                             </InputGroup>
                             <HStack w="100%" px="30px" justify="space-between">
                                 <Text fontSize="13px">Uniquement les mangas sauvegardés</Text>
-                                <Switch colorScheme="teal" isChecked={showOnlySaved} onChange={filterMangaList} />
+                                <Switch colorScheme="blue" isChecked={showOnlySaved} onChange={filterMangaList} />
                             </HStack>
                         </VStack>
                         <VStack w="100%" overflowY="scroll" maxH="71vh">

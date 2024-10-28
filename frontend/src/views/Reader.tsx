@@ -37,6 +37,7 @@ export const Reader = () => {
                     img.style.pointerEvents = 'none';
                     img.style.userSelect = 'none';
 
+                    // eslint-disable-next-line
                     img.onload = () => {
                         imagesLoaded++;
                         if (imagesLoaded === size) {
