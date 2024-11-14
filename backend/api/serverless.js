@@ -8,7 +8,7 @@ const app = Fastify({
 });
 
 app.register(cors);
-app.register(import("../src/app.js"));
+app.register(import("../api/app.js"));
 
 export default async (req, res) => {
     await app.ready();
