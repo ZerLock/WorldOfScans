@@ -21,6 +21,15 @@ export interface Engine {
     getPageUrl(manga: string, chapter: number, page: number): string;
 
     /**
+     * @brief Return all pages images as an array of their base64 value
+     *
+     * @param manga manga name
+     * @param chapter chapter number
+     * @returns array of base64 images values
+     */
+    getPages(manga: string, chapter: number): Promise<string[]>;
+
+    /**
      * @brief Get number of chapters a manga hold
      *
      * @param manga manga name

@@ -26,8 +26,6 @@ let MangaService = class MangaService {
             throw new common_1.NotFoundException(`manga ${mangaName} not found`);
         }
     }
-    async fetchPage(mangaName, chapter, page) {
-    }
     numberToArray(nb) {
         return Array.from({ length: nb }, (_, i) => i + 1);
     }
@@ -37,13 +35,17 @@ let MangaService = class MangaService {
     sanitizeFromUrl(str) {
         return this.capitalize(str.replaceAll('-', ' '));
     }
+    pageUrl(manga, chapter, page) {
+        return this.pageBaseUrl
+            .replace('$MANGA', manga)
+            .replace('$CHAPTER', chapter.toString())
+            .replace('$PAGE_NUMBER', page.toString());
+    }
     async fetchAllPagesByChapter(mangaName, chapter, nbPages) {
         try {
             const imagesPromises = this.numberToArray(nbPages).map((index) => {
-                const url = this.pageBaseUrl
-                    .replace('$MANGA', this.sanitizeFromUrl(mangaName))
-                    .replace('$CHAPTER', chapter.toString())
-                    .replace('$PAGE_NUMBER', (index + 1).toString());
+                const url = this.pageUrl(this.sanitizeFromUrl(mangaName), chapter, index);
+                console.log('index:', index, 'url:', url);
                 return axios_1.default.get(url, { responseType: 'arraybuffer' });
             });
             const responses = await Promise.all(imagesPromises);

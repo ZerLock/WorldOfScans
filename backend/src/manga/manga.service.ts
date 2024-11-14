@@ -21,10 +21,6 @@ export class MangaService {
         }
     }
 
-    private async fetchPage(mangaName: string, chapter: number, page: number) {
-
-    }
-
     private numberToArray(nb: number) {
         return Array.from({ length: nb }, (_, i) => i + 1);
     }
@@ -37,13 +33,18 @@ export class MangaService {
         return this.capitalize(str.replaceAll('-', ' '));
     }
 
+    private pageUrl(manga: string, chapter: number, page: number): string {
+        return this.pageBaseUrl
+            .replace('$MANGA', manga)
+            .replace('$CHAPTER', chapter.toString())
+            .replace('$PAGE_NUMBER', page.toString());
+    }
+
     async fetchAllPagesByChapter(mangaName: string, chapter: number, nbPages: number) {
         try {
             const imagesPromises = this.numberToArray(nbPages).map((index) => {
-                const url = this.pageBaseUrl
-                .replace('$MANGA', this.sanitizeFromUrl(mangaName))
-                .replace('$CHAPTER', chapter.toString())
-                .replace('$PAGE_NUMBER', (index + 1).toString());
+                const url = this.pageUrl(this.sanitizeFromUrl(mangaName), chapter, index);
+                console.log('index:', index, 'url:', url);
                 return axios.get(url, { responseType: 'arraybuffer' });
             });
 

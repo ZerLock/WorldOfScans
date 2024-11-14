@@ -1,3 +1,4 @@
+import utils from "../../utils/utils";
 import { Engine } from "./Engine";
 import axios from 'axios';
 
@@ -14,11 +15,16 @@ interface Mangas {
     [key: string]: CacheChapters;
 }
 
+interface TBuffer {
+    type: string;
+    data: number[];
+}
+
 export class AnimeSamaEngine implements Engine {
     private readonly pageBaseUrl: string = 'https://anime-sama.fr/s2/scans/$MANGA/$CHAPTER/$PAGE_NUMBER.jpg';
     private readonly coverBaseUrl: string = 'https://cdn.statically.io/gh/Anime-Sama/IMG/img/contenu/$MANGA.jpg';
 
-    private readonly serverBaseUrl = 'https://wos-backend.vercel.app';
+    private readonly serverBaseUrl = 'https://wos-backend-git-reworkbackend-terter-projects.vercel.app';
 
     private mangas: Mangas = {};
 
@@ -35,6 +41,35 @@ export class AnimeSamaEngine implements Engine {
             .replace('$MANGA', manga)
             .replace('$CHAPTER', chapter.toString())
             .replace('$PAGE_NUMBER', page.toString());
+    }
+
+    async getPages(manga: string, chapter: number): Promise<string[]> {
+        try {
+            const nbPages = await this.getNbPagesInChapter(manga, chapter);
+            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}/chapter/${chapter}/pages/${nbPages}`);
+
+            return response.data.map((dat: TBuffer) => {
+                const binary = new Uint8Array(dat.data).reduce((data, byte) => data + String.fromCharCode(byte), '');
+                return `data:image/jpeg;base64,${btoa(binary)}`;
+            });
+        } catch (e: any) {
+            console.error('An error occured while fetching/processing pages:', e);
+            return [];
+        }
+    }
+
+    async getPagesByPage(manga: string, chapter: number, nbPages: number, offset: number, max: number): Promise<string[]> {
+        try {
+            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}/chapter/${chapter}/pages/${nbPages}/offset/${offset}/max/${max}`);
+
+            return response.data.map((dat: TBuffer) => {
+                const binary = new Uint8Array(dat.data).reduce((data, byte) => data + String.fromCharCode(byte), '');
+                return `data:image/jpeg;base64,${btoa(binary)}`;
+            });
+        } catch (e: any) {
+            console.error('An error occured while fetching/processing pages:', e);
+            return [];
+        }
     }
 
     private parseMangaDataToChapters(data: string): Chapters {
@@ -86,7 +121,7 @@ export class AnimeSamaEngine implements Engine {
         }
 
         try {
-            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}`);
+            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}/episodes`);
             const chapters = this.parseMangaDataToChapters(response.data);
             this.mangas[manga] = { date: new Date(), chapters };
             return chapters;

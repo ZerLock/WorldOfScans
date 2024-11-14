@@ -19,6 +19,10 @@ export class EngineContext {
         return EngineContext.engine.getPageUrl(manga, chapter, page);
     }
 
+    static async getPages(manga: string, chapter: number): Promise<string[]> {
+        return EngineContext.engine.getPages(manga, chapter);
+    }
+
     static async getNbChapters(manga: string): Promise<number> {
         return EngineContext.engine.getNbChapters(manga);
     }

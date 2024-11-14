@@ -1,6 +1,10 @@
 import consts from "./consts";
 
 const utils = {
+    isDevelopmentMode: (): boolean => {
+        console.log('env:', process.env.REACT_APP_SERVER_ENV);
+        return process.env.REACT_APP_SERVER_ENV === 'development';
+    },
     keys: {
         chapterKeeperKey: (manga: string): string => {
             return consts.CHAPTER_KEEPER_KEY.replace('$MANGA', manga);

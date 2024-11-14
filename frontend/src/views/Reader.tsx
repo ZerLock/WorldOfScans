@@ -20,7 +20,7 @@ export const Reader = () => {
     const isNextChapterExists = useMemo(() => chapter + 1 <= nbChapters, [chapter, nbChapters]);
 
     useEffect(() => {
-        const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
+        const loadImagesInBatch = async (container: Element, pages: string[], nbImages: number, size: number) => {
             if (container.innerHTML !== '') {
                 return;
             }
@@ -32,7 +32,7 @@ export const Reader = () => {
 
                 for (let i = 0; i < size && currentIndex < nbImages; i++) {
                     const img = new Image();
-                    img.src = EngineContext.getPageUrl(manga, chapter, currentIndex + 1);
+                    img.src = pages[currentIndex];
                     img.loading = 'lazy';
                     img.style.pointerEvents = 'none';
                     img.style.userSelect = 'none';
@@ -73,7 +73,8 @@ export const Reader = () => {
                 localStorage.setItem(utils.keys.mangaFinishedKey(manga), 'true');
             }
 
-            loadImagesInBatch(pagesContainer, nbPages, 5);
+            const pages = await EngineContext.getPages(manga, chapter);
+            loadImagesInBatch(pagesContainer, pages, nbPages, 5);
         };
 
         setValue(utils.keys.chapterKeeperKey(manga), chapter);
