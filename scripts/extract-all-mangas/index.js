@@ -22,7 +22,8 @@ fs.readFile(filePath, 'utf8', async (err, html) => {
 
             const parentClass = parentDiv.attr('class');
             if (parentClass && parentClass.includes('Scans')) {
-                const mangaNameSnakeCase = href.split('/catalogue/')[1].split('/')[0];
+                // console.log($(link).closest('div').children().children().children().prev().text());
+                const mangaNameSnakeCase = $(link).closest('div').children().children().children().prev().text();
                 validMangaNames.push(mangaNameSnakeCase);
             }
         }
@@ -45,7 +46,7 @@ fs.readFile(filePath, 'utf8', async (err, html) => {
     };
 
     const generateMangaNameFormats = (mangaName) => {
-        const words = mangaName.split('-');
+        const words = mangaName.split(' ');
 
         const pascalCase = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
@@ -70,7 +71,7 @@ fs.readFile(filePath, 'utf8', async (err, html) => {
             const response = await axios.get(url);
             return response.status === 200;
         } catch (error) {
-            console.error(`Erreur lors de la requête vers ${url}:`, error.message);
+            //console.error(`Erreur lors de la requête vers ${url}:`, error.message);
             return false;
         }
     };
@@ -85,7 +86,7 @@ fs.readFile(filePath, 'utf8', async (err, html) => {
                 console.log(`Nom valide trouvé: ${validFormat}`);
                 validMangaFormats.push(validFormat);
             } else {
-                console.log(`Aucun format valide trouvé pour ${mangaName}`);
+                console.error(`Aucun format valide trouvé pour ${mangaName}`);
             }
         }
 
