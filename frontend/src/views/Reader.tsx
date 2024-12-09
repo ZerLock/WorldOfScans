@@ -68,17 +68,12 @@ export const Reader = () => {
             setNbChapters(tmpNbChapters);
 
             const nbPages = await EngineContext.getNbPagesInChapter(manga, chapter);
-
-            if (!isNextChapterExists) {
-                localStorage.setItem(utils.keys.mangaFinishedKey(manga), 'true');
-            }
-
             loadImagesInBatch(pagesContainer, nbPages, 5);
         };
 
         setValue(utils.keys.chapterKeeperKey(manga), chapter);
         bootstrap();
-    }, [manga, chapter, isNextChapterExists, navigate]);
+    }, [manga, chapter, nbChapters, isNextChapterExists, navigate]);
 
     const goToPrevChapter = () => {
         navigate(`/manga/${manga}/chapter/${chapter - 1}`);

@@ -27,7 +27,6 @@ import { HomeTopbar } from "../components/HomeTopbar";
 export const App = () => {
     const navigate = useNavigate();
     const [savedMangas, setSavedMangas] = useState<string[]>([]);
-    const [finishedMangas, setFinishedMangas] = useState<string[]>([]);
     const [showOnlySaved, setShowOnlySaved] = useState<boolean>(false);
     const [search, setSearch] = useState<string>('');
 
@@ -42,9 +41,6 @@ export const App = () => {
     useEffect(() => {
         const saved = utils.getSavedMangas();
         setSavedMangas(saved);
-
-        const finished = utils.getFinishedMangas();
-        setFinishedMangas(finished);
 
         const isShowOnlySaved = localStorage.getItem(consts.SHOW_ONLY_SAVED_KEY);
         if (isShowOnlySaved) {
@@ -89,10 +85,6 @@ export const App = () => {
         return savedMangas.includes(manga);
     }, [savedMangas]);
 
-    const isMangaFinished = React.useCallback((manga: string) => {
-        return finishedMangas.includes(manga);
-    }, [finishedMangas]);
-
     const mangaList = useMemo(() => {
         const beforeSearch = showOnlySaved
             ? Object.keys(consts.MANGAS).filter(isMangaSaved)
@@ -109,7 +101,6 @@ export const App = () => {
 
         return (
             <span>
-                {isMangaFinished(text) && '✅ '}
                 {textArray.map((item, index) => (
                     <span key={`${item}-${index}`}>
                         {item}
