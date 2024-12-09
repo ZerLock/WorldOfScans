@@ -8,9 +8,6 @@ const utils = {
         mangaSavedKey: (manga: string): string => {
             return consts.MANGA_SAVED_KEY.replace('$MANGA', manga);
         },
-        mangaFinishedKey: (manga: string): string => {
-            return consts.MANGA_FINISHIED_KEY.replace('$MANGA', manga);
-        }
     },
     numberToArray: (nb: number): number[] => {
         return Array.from({ length: nb }, (_, i) => i + 1);
@@ -29,9 +26,6 @@ const utils = {
     },
     getSavedMangas: (): string[] => {
         return utils.getFromLocalStorageKeys(consts.MANGA_SAVED_KEY);
-    },
-    getFinishedMangas: (): string[] => {
-        return utils.getFromLocalStorageKeys(consts.MANGA_FINISHIED_KEY);
     },
 };
 

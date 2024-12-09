@@ -7,7 +7,6 @@ const consts = {
     CHAPTER_KEEPER_KEY: '$MANGA-CHAPTER-KEEPER',
     MANGA_SAVED_KEY: '$MANGA-SAVED',
     SHOW_ONLY_SAVED_KEY: 'SHOW_ONLY_SAVED',
-    MANGA_FINISHIED_KEY: '$MANGA-FINISHED',
 };
 
 export default consts;
