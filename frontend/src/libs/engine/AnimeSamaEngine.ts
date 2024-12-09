@@ -86,7 +86,7 @@ export class AnimeSamaEngine implements Engine {
         }
 
         try {
-            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}`);
+            const response = await axios.get(`${this.serverBaseUrl}/manga/${manga}/chapters`);
             const chapters = this.parseMangaDataToChapters(response.data);
             this.mangas[manga] = { date: new Date(), chapters };
             return chapters;
