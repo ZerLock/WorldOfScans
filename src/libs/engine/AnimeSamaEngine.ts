@@ -18,7 +18,7 @@ export class AnimeSamaEngine implements Engine {
     private readonly pageBaseUrl: string = 'https://anime-sama.fr/s2/scans/$MANGA/$CHAPTER/$PAGE_NUMBER.jpg';
     private readonly coverBaseUrl: string = 'https://cdn.statically.io/gh/Anime-Sama/IMG/img/contenu/$MANGA.jpg';
 
-    private readonly serverBaseUrl = 'https://wos-backend.vercel.app';
+    private readonly serverBaseUrl = 'https://wos-animesama-engine.vercel.app';
 
     private mangas: Mangas = {};
 
