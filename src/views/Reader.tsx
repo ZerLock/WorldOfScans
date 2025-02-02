@@ -32,7 +32,8 @@ export const Reader = () => {
 
                 for (let i = 0; i < size && currentIndex < nbImages; i++) {
                     const img = new Image();
-                    img.src = EngineContext.getPageUrl(manga, chapter, currentIndex + 1);
+                    img.src = `https://wos-backend-3tsq3dtzd-terter-projects.vercel.app/api/scans/${manga}/${chapter}/${currentIndex + 1}`;
+                    // img.src = EngineContext.getPageUrl(manga, chapter, currentIndex + 1);
                     img.loading = 'lazy';
                     img.style.pointerEvents = 'none';
                     img.style.userSelect = 'none';
