@@ -1,10 +1,10 @@
 import {
     createBrowserRouter,
     RouterProvider,
-  } from "react-router-dom";
+} from "react-router-dom";
 import { App } from "./views/Home";
+import { Manga } from "./views/Manga";
 import { Reader } from "./views/Reader";
-import { Chapters } from "./views/Chapters";
 
 const router = createBrowserRouter([
     {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/manga/:manga/chapter',
-        element: <Chapters />,
+        element: <Manga />
     },
     {
         path: '/manga/:manga/chapter/:chapter',

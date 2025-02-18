@@ -15,18 +15,14 @@ const root = ReactDOM.createRoot(container);
 EngineContext.setEngine(new AnimeSamaEngine());
 
 root.render(
-    <>
-        <React.StrictMode>
-            <ChakraProvider theme={theme}>
-                <ReactPWAInstallProvider enableLogging>
-                    <Box mb="30px">
-                        <Router />
-                        <PWA />
-                    </Box>
-                </ReactPWAInstallProvider>
-            </ChakraProvider>
-        </React.StrictMode>
-    </>
+    <ChakraProvider theme={theme}>
+        <ReactPWAInstallProvider enableLogging>
+            <Box mb="30px">
+                <Router />
+                <PWA />
+            </Box>
+        </ReactPWAInstallProvider>
+    </ChakraProvider>
 );
 
 serviceWorker.register();
