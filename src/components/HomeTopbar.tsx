@@ -1,23 +1,12 @@
-import React from 'react';
-import { HStack, Heading, IconButton, useDisclosure } from '@chakra-ui/react';
-import consts from '../utils/consts';
-import { QuestionIcon } from '@chakra-ui/icons';
-import { FaqModal } from './FaqModal';
+import { HStack, Image, Text } from "@chakra-ui/react";
 
-export const HomeTopbar = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+interface HomeTopbarProps {
+    name: string;
+}
 
-    return (
-        <>
-            <HStack w="100%" mt="50px" px="20px">
-                <Heading w="100%" flex="1" textAlign="start">{consts.APP_NAME}</Heading>
-                <HStack>
-                    <IconButton aria-label="foire aux questions (faq)" colorScheme="blue" onClick={onOpen}>
-                        <QuestionIcon />
-                    </IconButton>
-                </HStack>
-            </HStack>
-            <FaqModal isOpen={isOpen} onClose={onClose} />
-        </>
-    );
-};
+export const HomeTopbar = ({ name }: HomeTopbarProps) => (
+    <HStack top={0} pos="fixed" zIndex={1} backgroundColor="white" w="100%" p={4} pb={2} alignItems="center">
+        <Image src="/logo512.png" w={8} />
+        <Text w="100%" fontWeight="bold">{name}</Text>
+    </HStack>
+);

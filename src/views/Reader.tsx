@@ -1,121 +1,70 @@
-import * as React from "react";
-import { useEffect, useState, useMemo } from 'react';
+import { Box, HStack, IconButton, Text, VStack, Image as CImage } from "@chakra-ui/react"
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { VStack, Text, Box } from "@chakra-ui/react";
-import utils from "../utils/utils";
-import { PaginationSelector } from "../components/PaginationSelector";
-import { setValue } from "../utils/storage";
-import { Topbar } from "../components/Topbar";
-import { AppLayout } from "../components/AppLayout";
-import { ReaderLayout } from "../components/ReaderLayout";
 import { EngineContext } from "../libs/engine/EngineContext";
+import utils from "../utils/utils";
+import { IoArrowBack, IoArrowForward } from "react-icons/io5";
+import { LazyLoader } from "../components/PagesLazyLoader";
+import LazyImage from "../components/LazyImage";
 
 export const Reader = () => {
     const navigate = useNavigate();
     const params = useParams();
     const [nbChapters, setNbChapters] = useState<number>(0);
+    const [nbPages, setNbPages] = useState<number>(0);
+    const [nbImagesLoaded, setImagesLoaded] = useState(0);
     const manga = params.manga || '';
     const chapter = Number(params.chapter);
 
-    const isNextChapterExists = useMemo(() => chapter + 1 <= nbChapters, [chapter, nbChapters]);
-
     useEffect(() => {
-        const loadImagesInBatch = (container: Element, nbImages: number, size: number) => {
-            if (container.innerHTML !== '') {
-                return;
-            }
-
-            let currentIndex = 0;
-
-            function loadNextBatch() {
-                let imagesLoaded = 0;
-
-                for (let i = 0; i < size && currentIndex < nbImages; i++) {
-                    const img = new Image();
-                    img.src = EngineContext.getPageUrl(manga, chapter, currentIndex + 1);
-                    img.loading = 'lazy';
-                    img.style.pointerEvents = 'none';
-                    img.style.userSelect = 'none';
-
-                    // eslint-disable-next-line
-                    img.onload = () => {
-                        imagesLoaded++;
-                        if (imagesLoaded === size) {
-                            loadNextBatch();
-                        }
-                    };
-
-                    console.log('loading page:', currentIndex + 1);
-                    container.appendChild(img);
-                    currentIndex++;
-                }
-            }
-
-            loadNextBatch();
-        };
-
         const bootstrap = async () => {
-            window.scrollTo(0, 0);
-            const pagesContainer = document.getElementById('pages-container');
-            if (!pagesContainer) {
-                navigate(`/manga/${manga}/chapter`);
-                return;
-            }
-
-            pagesContainer.innerHTML = '';
-
             const tmpNbChapters = await EngineContext.getNbChapters(manga);
             setNbChapters(tmpNbChapters);
 
             const nbPages = await EngineContext.getNbPagesInChapter(manga, chapter);
-            loadImagesInBatch(pagesContainer, nbPages, 5);
+            setNbPages(nbPages);
         };
 
-        setValue(utils.keys.chapterKeeperKey(manga), chapter);
+        localStorage.setItem(utils.keys.chapterKeeperKey(manga), chapter.toString());
         bootstrap();
-    }, [manga, chapter, nbChapters, isNextChapterExists, navigate]);
+    }, [manga, chapter, nbChapters, navigate]);
 
-    const goToPrevChapter = () => {
-        navigate(`/manga/${manga}/chapter/${chapter - 1}`);
-    };
+    const isNextChapterExists = useMemo(() => chapter + 1 <= nbChapters, [chapter, nbChapters]);
 
-    const goToNextChapter = () => {
-        navigate(`/manga/${manga}/chapter/${chapter + 1}`);
-    };
-
-    const goToChapterSelection = () => {
+    const backToManga = () => {
         navigate(`/manga/${manga}/chapter`);
+    };
+
+    const nextChapter = () => {
+        setNbPages(0);
+        setImagesLoaded(0);
+        navigate(`/manga/${manga}/chapter/${chapter + 1}`);
     };
 
     return (
         <>
-            <VStack justifyItems="center" gap="32px" marginBottom="0px">
-                <AppLayout>
-                    <VStack gap="0px" w="100%">
-                        <Topbar close={goToChapterSelection} content={manga} />
-                        <Box marginTop="16px" w="100%" px="30px">
-                            <PaginationSelector
-                                prevDisabled={chapter <= 1}
-                                onPrev={goToPrevChapter}
-                                nextDisabled={!isNextChapterExists}
-                                onNext={goToNextChapter}>
-                                <Text fontSize="18px">Chapitre {chapter}</Text>
-                            </PaginationSelector>
+            <VStack color="black">
+                <HStack px={{ base: '10px', md: '30%' }} pt="5px" w="100%" gap="1px" alignItems="center">
+                    <IconButton zIndex={3} aria-label="back to manga button" colorScheme='transparent' icon={<IoArrowBack size="24px" color="black" />} onClick={backToManga}/>
+                    <Text>Chapitre {chapter}</Text>
+                </HStack>
+                <VStack mx={{ base: '0px', md: '25%' }} mb="50px">
+                    <LazyLoader key={`${manga}/${chapter}`} manga={manga} chapter={chapter} nbPages={nbPages} loadFinished={() => setImagesLoaded(nbPages)} />
+                    {nbImagesLoaded >= nbPages && isNextChapterExists && <>
+                        <Box w="100%" px="10px" mt="20px">
+                            <HStack borderWidth={1} borderColor="rgb(242, 242, 242)" p={2} pr={4} borderRadius={8} w="100%" justify="space-between" onClick={nextChapter} _hover={{ cursor: 'pointer' }}>
+                                <HStack w="100%" gap={2}>
+                                    <Box display="inline-block" overflow="hidden" borderRadius={8}>
+                                        <CImage loading="lazy" h="90px" objectFit="cover" transform="scale(2)" aspectRatio={4/3} src={EngineContext.getPageUrl(manga, chapter + 1, 1)} />
+                                    </Box>
+                                    <Text fontSize="14px" fontWeight={900}>Chapitre {chapter + 1}</Text>
+                                </HStack>
+                                <IoArrowForward size="24px" color="black" />
+                            </HStack>
                         </Box>
-                    </VStack>
-                </AppLayout>
-                <ReaderLayout>
-                    <VStack w="100%" h="100%" gap="0px" id="pages-container">
-                        <Text>Coucou</Text>
-                    </VStack>
-                </ReaderLayout>
-                <PaginationSelector
-                    prevDisabled={chapter <= 1}
-                    onPrev={goToPrevChapter}
-                    nextDisabled={!isNextChapterExists}
-                    onNext={goToNextChapter}
-                />
+                    </>}
+                </VStack>
             </VStack>
         </>
     );
-};
+}
