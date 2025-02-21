@@ -24,6 +24,10 @@ export class AnimeSamaEngine implements Engine {
 
   private mangas: Mangas = {};
 
+  private capitalizeWords(text: string): string {
+    return text.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
   private encoreToUrl(value: string): string {
     return value
       .replaceAll(" ", "-")
@@ -46,7 +50,7 @@ export class AnimeSamaEngine implements Engine {
 
   getPageUrl(manga: string, chapter: number, page: number): string {
     return this.pageBaseUrl
-      .replace("$MANGA", manga)
+      .replace("$MANGA", this.capitalizeWords(manga))
       .replace("$CHAPTER", chapter.toString())
       .replace("$PAGE_NUMBER", page.toString());
   }
