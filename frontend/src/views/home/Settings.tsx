@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Collapse, Flex, Heading, useToast, VStack } from "@chakra-ui/react";
 import { Switch } from "../../components/Switch";
 import { useEffect, useState } from "react";
 import { defaultSettings, getSettings, saveSettings, Settings as TSettings } from "../../utils/settings";
@@ -10,6 +10,7 @@ export const Settings = () => {
     const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
     const toast = useToast();
     const [settings, setSettings] = useState<TSettings>(defaultSettings());
+    const [developer, setDeveloper] = useState<boolean>(false);
 
     useEffect(() => {
         setSettings(getSettings());
@@ -20,20 +21,32 @@ export const Settings = () => {
         saveSettings({ ...settings, displayInstallationPopup: value });
     };
 
-    const resetSettings = () => {
+    const resetSettings = (displayToast: boolean = true) => {
         setSettings(defaultSettings());
         saveSettings(defaultSettings());
-        toast({
-            title: 'Les réglages ont été réinitialisé',
-            position: 'top',
-            duration: 1500,
-        });
+        if (displayToast) {
+            toast({
+                title: 'Les réglages ont été réinitialisé',
+                position: 'top',
+                duration: 1500,
+            });
+        }
     };
 
     const clearHistory = () => {
         localStorage.setItem(consts.HISTORY_KEY, [] as any);
         toast({
             title: `L'historique a été vidé`,
+            position: 'top',
+            duration: 1500,
+        });
+    };
+
+    const clearCache = () => {
+        localStorage.clear();
+        resetSettings(false);
+        toast({
+            title: 'Le cache a été vidé',
             position: 'top',
             duration: 1500,
         });
@@ -53,10 +66,16 @@ export const Settings = () => {
         <Flex flexDir="column" fontSize="14px" h="80vh" justify="space-between">
             <Box>
                 <VStack justify="space-between" gap="16px">
-                    <Switch text="Installation pop-up" value={settings.displayInstallationPopup} onChange={updateInstallationPopup} />
+                    <Switch text="Pop-up d'installation" value={settings.displayInstallationPopup} onChange={updateInstallationPopup} />
                     <Button fontSize="14px" colorScheme="blue" w="100%" onClick={installAppPwa}>Installer l'application</Button>
-                    <Button fontSize="14px" colorScheme="red" variant="outline" w="100%" onClick={resetSettings}>Réinitialiser les réglages</Button>
-                    <Button fontSize="14px" colorScheme="red" w="100%" onClick={clearHistory}>Supprimer l'historique</Button>
+                    <Switch text="Mode développeur" value={developer} onChange={(value) => setDeveloper(value)} />
+                    <Collapse in={developer} animateOpacity style={{ width: '100%' }}>
+                        <VStack gap="16px">
+                            <Button fontSize="14px" colorScheme="red" variant="outline" w="100%" onClick={() => resetSettings()}>Réinitialiser les réglages</Button>
+                            <Button fontSize="14px" colorScheme="red" variant="outline" w="100%" onClick={clearHistory}>Supprimer l'historique</Button>
+                            <Button fontSize="14px" colorScheme="red" w="100%" onClick={clearCache}>Vider le cache</Button>
+                        </VStack>
+                    </Collapse>
                 </VStack>
             </Box>
             <VStack gap={4}>
