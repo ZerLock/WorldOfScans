@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getArray } from "../../utils/storage";
 import consts from "../../utils/consts";
+import { useTranslation } from "react-i18next";
 
 export const Saved = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [saved, setSaved] = useState<string[]>([]);
 
@@ -17,6 +19,6 @@ export const Saved = () => {
     };
 
     return (
-        <ScansGrid items={saved} action={goToManga} fallbackText="Vous n'avez pas encore de favoris" />
+        <ScansGrid items={saved} action={goToManga} fallbackText={t('saved.empty')} />
     );
 }

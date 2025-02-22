@@ -1,6 +1,5 @@
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { cloneElement, useEffect, useRef } from "react";
-import { DESKTOP_MAX_W } from "../style";
 
 interface NavbarItem {
     name: string;

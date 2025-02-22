@@ -3,44 +3,48 @@ import { AppLayout } from "../components/AppLayout";
 import { Navbar } from "../components/Navbar";
 import { IoSettingsOutline, IoCalendarClearOutline, IoAppsOutline, IoHeartOutline, IoCalendarClear, IoApps, IoHeart, IoSettings } from "react-icons/io5";
 import { Flex, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HomeTopbar as V2HomeTopbar } from "../components/HomeTopbar";
 import consts from "../utils/consts";
 import { Home as HomeAcceuil } from "./home/Home";
 import { Scans } from "./home/Scans";
 import { Saved } from "./home/Saved";
 import { Settings } from "./home/Settings";
+import { useTranslation } from "react-i18next";
 
 export const App = () => {
+    const { t } = useTranslation();
     const [section, setSection] = useState(0);
     const [navbarH, setNavbarH] = useState(0);
 
     const navbarItems = [
         {
-            name: 'Home',
+            name: t('nav.home'),
             icon: section === 0 ? <IoCalendarClear color="black" /> : <IoCalendarClearOutline color="grey" />,
             textColor: section === 0 ? 'black' : 'grey',
             action: () => setSection(0),
         },
         {
-            name: 'Scans',
+            name: t('nav.scans'),
             icon: section === 1 ? <IoApps color="black" /> : <IoAppsOutline color="grey" />,
             textColor: section === 1 ? 'black' : 'grey',
             action: () => setSection(1)
         },
         {
-            name: 'Favoris',
+            name: t('nav.saved'),
             icon: section === 2 ? <IoHeart color="black" /> : <IoHeartOutline color="grey" />,
             textColor: section === 2 ? 'black' : 'grey',
             action: () => setSection(2),
         },
         {
-            name: 'Réglages',
+            name: t('nav.settings'),
             icon: section === 3 ? <IoSettings color="black" /> : <IoSettingsOutline color="grey" />,
             textColor: section === 3 ? 'black' : 'grey',
             action: () => setSection(3),
         },
     ];
+
+    useEffect(() => {})
 
     return (
         <>
