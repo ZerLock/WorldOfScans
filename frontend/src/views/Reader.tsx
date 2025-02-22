@@ -46,7 +46,7 @@ export const Reader = () => {
             <VStack color="black">
                 <HStack px={{ base: '10px', md: '30%' }} pt="5px" w="100%" gap="1px" alignItems="center">
                     <IconButton zIndex={3} aria-label="back to manga button" colorScheme='transparent' icon={<IoArrowBack size="24px" color="black" />} onClick={backToManga}/>
-                    <Text>Chapitre {chapter}</Text>
+                    <Text>Chapitre {utils.chapters.chapterNumber(manga, chapter)}</Text>
                 </HStack>
                 <VStack mx={{ base: '0px', md: '25%' }} mb="50px">
                     <LazyLoader key={`${manga}/${chapter}`} manga={manga} chapter={chapter} nbPages={nbPages} loadFinished={() => setImagesLoaded(nbPages)} />

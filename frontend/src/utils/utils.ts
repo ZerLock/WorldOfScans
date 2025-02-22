@@ -87,6 +87,17 @@ const utils = {
       )}, ${utils.cover.addN(b, 30)}`;
     },
   },
+  chapters: {
+    chapterNumber: (manga: string, chapter: number): number => {
+      // Handle exceptions (with chapter 0 for example)
+      switch (manga) {
+        case "Jujutsu Kaisen":
+          return chapter - 1;
+        default:
+          return chapter;
+      }
+    },
+  },
 };
 
 export default utils;

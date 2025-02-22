@@ -24,11 +24,7 @@ export class AnimeSamaEngine implements Engine {
 
   private mangas: Mangas = {};
 
-  private capitalizeWords(text: string): string {
-    return text.replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-  private encoreToUrl(value: string): string {
+  private encodeToUrl(value: string): string {
     return value
       .replaceAll(" ", "-")
       .normalize("NFD")
@@ -45,12 +41,12 @@ export class AnimeSamaEngine implements Engine {
   }
 
   getCoverUrl(manga: string): string {
-    return this.coverBaseUrl.replace("$MANGA", this.encoreToUrl(manga));
+    return this.coverBaseUrl.replace("$MANGA", this.encodeToUrl(manga));
   }
 
   getPageUrl(manga: string, chapter: number, page: number): string {
     return this.pageBaseUrl
-      .replace("$MANGA", this.capitalizeWords(manga))
+      .replace("$MANGA", manga)
       .replace("$CHAPTER", chapter.toString())
       .replace("$PAGE_NUMBER", page.toString());
   }
@@ -105,7 +101,7 @@ export class AnimeSamaEngine implements Engine {
 
     try {
       const response = await axios.get(
-        `${this.serverBaseUrl}/manga/${manga}/chapters`
+        `${this.serverBaseUrl}/manga/${this.encodeToUrl(manga)}/chapters`
       );
       const chapters = this.parseMangaDataToChapters(response.data);
       this.mangas[manga] = { date: new Date(), chapters };

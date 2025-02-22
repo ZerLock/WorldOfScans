@@ -130,7 +130,7 @@ export const Manga = () => {
                     <TruncatedText text={(consts.MANGAS as any)[manga]} title="Synopsis" nbOfLines={3} bgColor={`rgb(${lightBgColor})`} />
 
                     <VStack textAlign="start" w="100%" alignSelf="start" mt="16px" px="10px">
-                        <Button onClick={continueAtLastChapter} bgColor={`rgb(${lightBgColor})`} _hover={{ backgroundColor: `rgb(${lightBgColor})` }} color="white" w="100%">{lastChapter === 1 ? 'Commencer le manga' : `Continuer le chapitre ${lastChapter}`}</Button>
+                        <Button onClick={continueAtLastChapter} bgColor={`rgb(${lightBgColor})`} _hover={{ backgroundColor: `rgb(${lightBgColor})` }} color="white" w="100%">{lastChapter === 1 ? 'Commencer le manga' : `Continuer le chapitre ${utils.chapters.chapterNumber(manga, lastChapter)}`}</Button>
                         <HStack px="5px" py="10px" w="100%" justify="space-between" align="center">
                             <Text fontSize="14px" fontWeight={900}>{nbChapters} chapitres</Text>
                             <HStack onClick={reverseChaptersOrder} _hover={{cursor: 'pointer'}} align="center" gap={1}>
@@ -153,7 +153,7 @@ export const Manga = () => {
                                                 }}
                                             />
                                         </Box>
-                                        <Text fontSize="12px" fontWeight="bold">Chapitre {chapter}</Text>
+                                        <Text fontSize="12px" fontWeight="bold">Chapitre {utils.chapters.chapterNumber(manga, chapter)}</Text>
                                     </Box>
                                 ))}
                             </SimpleGrid>
