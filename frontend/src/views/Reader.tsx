@@ -5,9 +5,10 @@ import { EngineContext } from "../libs/engine/EngineContext";
 import utils from "../utils/utils";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { LazyLoader } from "../components/PagesLazyLoader";
-import LazyImage from "../components/LazyImage";
+import { useTranslation } from "react-i18next";
 
 export const Reader = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const params = useParams();
     const [nbChapters, setNbChapters] = useState<number>(0);
@@ -46,7 +47,7 @@ export const Reader = () => {
             <VStack color="black">
                 <HStack px={{ base: '10px', md: '30%' }} pt="5px" w="100%" gap="1px" alignItems="center">
                     <IconButton zIndex={3} aria-label="back to manga button" colorScheme='transparent' icon={<IoArrowBack size="24px" color="black" />} onClick={backToManga}/>
-                    <Text>Chapitre {utils.chapters.chapterNumber(manga, chapter)}</Text>
+                    <Text>{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
                 </HStack>
                 <VStack mx={{ base: '0px', md: '25%' }} mb="50px">
                     <LazyLoader key={`${manga}/${chapter}`} manga={manga} chapter={chapter} nbPages={nbPages} loadFinished={() => setImagesLoaded(nbPages)} />
@@ -57,7 +58,7 @@ export const Reader = () => {
                                     <Box display="inline-block" overflow="hidden" borderRadius={8}>
                                         <CImage loading="lazy" h="90px" objectFit="cover" transform="scale(2)" aspectRatio={4/3} src={EngineContext.getPageUrl(manga, chapter + 1, 1)} />
                                     </Box>
-                                    <Text fontSize="14px" fontWeight={900}>Chapitre {chapter + 1}</Text>
+                                    <Text fontSize="14px" fontWeight={900}>{t('chapter')} {utils.chapters.chapterNumber(manga, chapter + 1)}</Text>
                                 </HStack>
                                 <IoArrowForward size="24px" color="black" />
                             </HStack>

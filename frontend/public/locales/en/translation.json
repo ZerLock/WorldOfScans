@@ -1,0 +1,53 @@
+{
+    "settings": {
+        "installation_popup": "Installation pop-up",
+        "ui_language": "User interface language",
+        "install_app": "Install the application",
+        "developer_mode": "Developer settings",
+        "reset_settings": "Reset settings",
+        "clear_history": "Clear history",
+        "clear_cache": "Clear cache",
+        "images_sources_title": "Images sources",
+        "images_sources_desc": "This application is only dedicated to indexing content and does not store any images or files internally. All content displayed comes from external sources",
+        "profit_title": "No profit",
+        "profit_desc": "This application is completely free, without ads or in-app purchases. No revenue is generated through this site, which has a purely non-commercial purpose",
+        "open_source_project": "Open Source project"
+    },
+    "toast": {
+        "cache": "Cache has been removed",
+        "history": "History has been removed",
+        "settings": "Settings has been reinitialized"
+    },
+    "install_popup": "Install this application for a better experience",
+    "informations": "Informations",
+    "home": {
+        "tabs": {
+            "history": "History",
+            "trending": "Trending",
+            "discover": "Discover"
+        },
+        "empty": {
+            "history": "You have no history yet",
+            "broken": "It seems that the machine is broken 🤔"
+        }
+    },
+    "scans": {
+        "search_placeholder": "Search (ex: One piece, Naruto...)",
+        "empty": "Results will be displayed here"
+    },
+    "saved": {
+        "empty": "You don't have any saved yet"
+    },
+    "nav": {
+        "home": "Home",
+        "scans": "Scans",
+        "saved": "Saved",
+        "settings": "Settings"
+    },
+    "chapter": "Chapter",
+    "chapters": "Chapters",
+    "first": "first",
+    "last": "last ",
+    "start_manga": "Start the manga",
+    "continue_manga": "Continue at chapter"
+}

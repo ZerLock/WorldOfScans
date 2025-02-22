@@ -5,8 +5,10 @@ import debounce from 'lodash.debounce';
 import { ScansGrid } from "../../components/ScansGrid";
 import { useNavigate } from "react-router-dom";
 import consts from "../../utils/consts";
+import { useTranslation } from "react-i18next";
 
 export const Scans = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
 
@@ -50,7 +52,7 @@ export const Scans = () => {
                 <InputLeftElement>
                     <Search2Icon color="gray" />
                 </InputLeftElement>
-                <Input id="search-input" colorScheme="blue" placeholder="Rechercher (ex: One piece, Naruto...)" onChange={debounceSearch} />
+                <Input id="search-input" colorScheme="blue" placeholder={t('scans.search_placeholder')} onChange={debounceSearch} />
                 {search && <>
                     <InputRightElement>
                         <IconButton
@@ -67,7 +69,7 @@ export const Scans = () => {
                     </InputRightElement>
                 </>}
             </InputGroup>
-            <ScansGrid items={mangaList} action={goToManga} fallbackText="Les résultats de la recherche s'afficheront ici" />
+            <ScansGrid items={mangaList} action={goToManga} fallbackText={t('scans.empty')} />
         </Stack>
     );
 }

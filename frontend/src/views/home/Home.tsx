@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import utils from "../../utils/utils";
 import { ScansGrid } from "../../components/ScansGrid";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface HomeProps {
     parentSection: number;
 }
 
 export const Home = ({ parentSection }: HomeProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [section, setSection] = useState(0);
     const [history, setHistory] = useState<string[]>([]);
@@ -29,8 +31,8 @@ export const Home = ({ parentSection }: HomeProps) => {
             'Solo Leveling',
             'Tokyo Ghoul',
             'One punch man',
-            'Demon slayer',
-            'Jujutsu kaisen',
+            'Demon Slayer',
+            'Jujutsu Kaisen',
             'My Hero Academia',
             'Naruto',
             'Vagabond',
@@ -54,9 +56,15 @@ export const Home = ({ parentSection }: HomeProps) => {
     };
 
     const tabs = {
-        'Historique': <ScansGrid items={history} action={goToManga} fallbackText="Vous n'avez pas encore d'historique" />,
-        'Populaire': <ScansGrid items={populaires} action={goToManga} fallbackText="En cours de développement..." />,
-        'Découvrir': <ScansGrid items={randomSelection} action={goToManga} fallbackText="Il semblerait que la machine soit cassée 🤔" />,
+        'Historique': <ScansGrid items={history} action={goToManga} fallbackText={t('home.empty.history')} />,
+        'Populaire': <ScansGrid items={populaires} action={goToManga} fallbackText={t('home.empty.broken')} />,
+        'Découvrir': <ScansGrid items={randomSelection} action={goToManga} fallbackText={t('home.empty.broken')} />,
+    };
+
+    const tabsTranslation = {
+        'Historique': t('home.tabs.history'),
+        'Populaire': t('home.tabs.trending'),
+        'Découvrir': t('home.tabs.discover'),
     };
 
     return (
@@ -69,7 +77,7 @@ export const Home = ({ parentSection }: HomeProps) => {
                 <Tabs index={section} onChange={setSection} align="center" variant="solid-rounded" colorScheme="transparent">
                     <TabList gap={2}>
                         {Object.keys(tabs).map((tab, index) => (
-                            <Tab fontSize={14} borderWidth={1} borderColor="black" bgColor={section === index ? 'black' : 'transparent'} borderRadius={8} key={tab}>{tab}</Tab>
+                            <Tab fontSize={14} borderWidth={1} borderColor="black" bgColor={section === index ? 'black' : 'transparent'} borderRadius={8} key={tab}>{(tabsTranslation as any)[tab]}</Tab>
                         ))}
                     </TabList>
                     <TabPanels>

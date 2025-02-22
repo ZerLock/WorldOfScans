@@ -10,8 +10,11 @@ import { AppLayout } from '../components/AppLayout';
 import { HiOutlineArrowsUpDown } from 'react-icons/hi2'
 import { getArray, saveArray } from '../utils/storage';
 import LazyImage from '../components/LazyImage';
+import { useTranslation } from 'react-i18next';
+import { getInterfaceLanguage } from '../utils/settings';
 
 export const Manga = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const params = useParams();
     const manga = params.manga || '';
@@ -127,15 +130,15 @@ export const Manga = () => {
 
             <AppLayout>
                 <VStack mt={2} w="100%" pb="30px">
-                    <TruncatedText text={(consts.MANGAS as any)[manga]} title="Synopsis" nbOfLines={3} bgColor={`rgb(${lightBgColor})`} />
+                    <TruncatedText text={(consts.MANGAS as any)[manga][getInterfaceLanguage()] || 'Soon...'} title="Synopsis" nbOfLines={3} bgColor={`rgb(${lightBgColor})`} />
 
                     <VStack textAlign="start" w="100%" alignSelf="start" mt="16px" px="10px">
-                        <Button onClick={continueAtLastChapter} bgColor={`rgb(${lightBgColor})`} _hover={{ backgroundColor: `rgb(${lightBgColor})` }} color="white" w="100%">{lastChapter === 1 ? 'Commencer le manga' : `Continuer le chapitre ${utils.chapters.chapterNumber(manga, lastChapter)}`}</Button>
+                        <Button onClick={continueAtLastChapter} bgColor={`rgb(${lightBgColor})`} _hover={{ backgroundColor: `rgb(${lightBgColor})` }} color="white" w="100%">{lastChapter === 1 ? t('start_manga') : `${t('continue_manga')} ${utils.chapters.chapterNumber(manga, lastChapter)}`}</Button>
                         <HStack px="5px" py="10px" w="100%" justify="space-between" align="center">
-                            <Text fontSize="14px" fontWeight={900}>{nbChapters} chapitres</Text>
+                            <Text fontSize="14px" fontWeight={900}>{nbChapters} {t('chapters').toLowerCase()}</Text>
                             <HStack onClick={reverseChaptersOrder} _hover={{cursor: 'pointer'}} align="center" gap={1}>
                                 <HiOutlineArrowsUpDown />
-                                <Text>{reverseOrder ? 'first' : 'last '}</Text>
+                                <Text>{reverseOrder ? t('first') : t('last')}</Text>
                             </HStack>
                         </HStack>
                         {chaptersArray.length === 0 ? <>
@@ -153,7 +156,7 @@ export const Manga = () => {
                                                 }}
                                             />
                                         </Box>
-                                        <Text fontSize="12px" fontWeight="bold">Chapitre {utils.chapters.chapterNumber(manga, chapter)}</Text>
+                                        <Text fontSize="12px" fontWeight="bold">{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
                                     </Box>
                                 ))}
                             </SimpleGrid>
