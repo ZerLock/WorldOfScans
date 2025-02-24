@@ -30,6 +30,21 @@
             max-height: 100vh;
             color: black;
         }
+
+        /* Pour WebKit (Chrome, Edge, Safari) */
+        ::-webkit-scrollbar {
+        display: none;
+        }
+
+        /* Pour Firefox */
+        html {
+        scrollbar-width: none;
+        }
+
+        /* Pour IE et Edge */
+        body {
+        -ms-overflow-style: none;
+        }
     </style>
   </head>
   <body>
