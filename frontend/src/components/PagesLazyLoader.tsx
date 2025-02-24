@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { EngineContext } from "../libs/engine/EngineContext";
 import LazyImage from "./LazyImage";
+import { Spinner } from "@chakra-ui/react";
 
 interface LazyLoaderProps {
     manga: string;
@@ -67,10 +68,13 @@ export const LazyLoader = ({ manga, chapter, nbPages, loadFinished }: LazyLoader
   }, [loadedImages, loadNextBatch]);
 
   return (
-    <div id="pages-container" className="grid grid-cols-2 gap-4 p-4">
-      {loadedImages.map((src, index) => (
-        <LazyImage key={index} src={src} style={{ width: '100%' }} />
-      ))}
-    </div>
+    <>
+        {loadedImages.length === 0 && <Spinner mt="100px" size="xl" />}
+        <div id="pages-container" className="grid grid-cols-2 gap-4 p-4">
+        {loadedImages.map((src, index) => (
+            <LazyImage key={index} src={src} style={{ width: '100%' }} />
+        ))}
+        </div>
+    </>
   );
 };
