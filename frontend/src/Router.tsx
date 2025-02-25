@@ -5,6 +5,7 @@ import {
 import { App } from "./views/Home";
 import { Manga } from "./views/Manga";
 import { Reader } from "./views/Reader";
+import { Sitemap } from "./views/Sitemap";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
         path: '/manga/:manga/chapter/:chapter',
         element: <Reader />,
     },
+    {
+        path: '/sitemap',
+        element: <Sitemap />
+    }
 ]);
 
 export const Router = () => (
