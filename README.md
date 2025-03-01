@@ -2,6 +2,8 @@
 
 World Of Scans application allows users to read their favorite manga directly Online and on Mobile, with a smooth and optimized interface for both mobile and desktop. Chapters are retrieved from external sources, and images are displayed without being stored internally. The app focuses on providing a fast, intuitive reading experience with no intrusive ads.
 
+<video type="video/mp4" src=".github/assets/wos_desktop.mp4" controls loop></video>
+
 ## 🚀 Installation
 
 Refer to each project installation
