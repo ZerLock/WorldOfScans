@@ -11,7 +11,10 @@
         "images_sources_desc": "Cette application est uniquement dédiée à l'indexation de contenu et ne stocke aucune image, ni fichier en interne. Tout le contenu affiché provient de sources extenes",
         "profit_title": "Aucun but lucratif",
         "profit_desc": "Cette application est entièrement gratuite, sans publicités ni achats intégrés. Aucun revenu n'est généré par le biais de ce site, qui a un objectif purement non-commercial",
-        "open_source_project": "Projet Open Source"
+        "open_source_project": "Projet Open Source",
+        "id": "ID unique",
+        "id_changed": "L'ID unique a été modifié, les données ont été synchronisé",
+        "clear_id": "Laisser ce champ vide génèrera un nouvel ID lors de la sauvegarde"
     },
     "toast": {
         "cache": "Le cache a été vidé",
@@ -50,5 +53,6 @@
     "first": "first",
     "last": "last ",
     "start_manga": "Commencer le manga",
-    "continue_manga": "Continuer le chapitre"
+    "continue_manga": "Continuer le chapitre",
+    "save": "Sauvegarder"
 }

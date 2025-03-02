@@ -9,6 +9,7 @@ import { EngineContext } from "./libs/engine/EngineContext";
 import { AnimeSamaEngine } from "./libs/engine/AnimeSamaEngine";
 import i18n from './i18n';
 import { getInterfaceLanguage } from "./utils/settings";
+import { Data } from "./utils/data";
 
 const container = document.getElementById("root");
 if (!container) throw new Error('Failed to find the root element');
@@ -17,6 +18,8 @@ const root = ReactDOM.createRoot(container);
 EngineContext.setEngine(new AnimeSamaEngine());
 
 i18n.changeLanguage(getInterfaceLanguage());
+
+await Data.instance.sync();
 
 root.render(
     <ChakraProvider theme={theme}>
