@@ -6,6 +6,7 @@ import utils from "../utils/utils";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { LazyLoader } from "../components/PagesLazyLoader";
 import { useTranslation } from "react-i18next";
+import { Data } from "../utils/data";
 
 export const Reader = () => {
     const { t } = useTranslation();
@@ -26,9 +27,15 @@ export const Reader = () => {
             setNbPages(nbPages);
         };
 
-        localStorage.setItem(utils.keys.chapterKeeperKey(manga), chapter.toString());
+        // localStorage.setItem(utils.keys.chapterKeeperKey(manga), chapter.toString());
         bootstrap();
     }, [manga, chapter, nbChapters, navigate]);
+
+    useEffect(() => {
+        if (chapter > 0) {
+            Data.instance.updateMangaAvancement({ name: manga, chapter });
+        }
+    }, [manga, chapter]);
 
     const isNextChapterExists = useMemo(() => chapter + 1 <= nbChapters, [chapter, nbChapters]);
 

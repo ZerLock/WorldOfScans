@@ -12,6 +12,7 @@ import { getArray, saveArray } from '../utils/storage';
 import LazyImage from '../components/LazyImage';
 import { useTranslation } from 'react-i18next';
 import { getInterfaceLanguage } from '../utils/settings';
+import { Data } from '../utils/data';
 
 export const Manga = () => {
     const { t } = useTranslation();
@@ -46,16 +47,13 @@ export const Manga = () => {
                 setLightBgColor(utils.cover.getLighterColor(tmp));
             }
 
-            const saved: string[] = getArray(consts.MANGA_SAVED_KEY);
+            const saved = Data.instance.getSaved();
             setSavedMangas(saved);
             setMangaSaved(saved.includes(manga));
 
+            setLastChapter(Data.instance.getRead(manga));
+
             setNbChapters(await EngineContext.getNbChapters(manga));
-
-            setLastChapter(utils.getLastChapter(manga));
-
-            let history = getArray(consts.HISTORY_KEY);
-            saveArray(consts.HISTORY_KEY, [manga, ...(history.filter((e) => e !== manga))]);
 
             window.addEventListener('scroll', handleScroll);
         };
@@ -79,12 +77,15 @@ export const Manga = () => {
 
     const saveManga = () => {
         if (mangaSaved) {
-            setSavedMangas(savedMangas.filter((e) => e !== manga));
-            saveArray(consts.MANGA_SAVED_KEY, savedMangas.filter((e) => e !== manga));
+            // setSavedMangas(savedMangas.filter((e) => e !== manga));
+            // saveArray(consts.MANGA_SAVED_KEY, savedMangas.filter((e) => e !== manga));
+            Data.instance.removeMangaSaved(manga);
         } else {
-            setSavedMangas([manga, ...savedMangas]);
-            saveArray(consts.MANGA_SAVED_KEY, [manga, ...savedMangas])
+            // setSavedMangas([manga, ...savedMangas]);
+            // saveArray(consts.MANGA_SAVED_KEY, [manga, ...savedMangas])
+            Data.instance.addMangaSaved(manga);
         }
+        setSavedMangas(Data.instance.getSaved());
         setMangaSaved(old => !old);
     };
 

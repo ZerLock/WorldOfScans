@@ -4,6 +4,7 @@ import utils from "../../utils/utils";
 import { ScansGrid } from "../../components/ScansGrid";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Data } from "../../utils/data";
 
 interface HomeProps {
     parentSection: number;
@@ -18,7 +19,7 @@ export const Home = ({ parentSection }: HomeProps) => {
     const [populaires, setPopulaires] = useState<string[]>([]);
 
     useEffect(() => {
-        setHistory(utils.getHistory());
+        setHistory(Data.instance.getHistory());
     }, [parentSection])
 
     useEffect(() => {
