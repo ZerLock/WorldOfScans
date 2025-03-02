@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/prisma/prisma.module';
+import { PrismaModule } from '../prisma/prisma.module';
 import { EntityController } from './entity.controller';
 import { EntityService } from './entity.service';
 import { EntityRepository } from './entity.repository';
