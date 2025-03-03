@@ -8,7 +8,6 @@ import { TruncatedText } from '../components/TruncatedText';
 import consts from '../utils/consts';
 import { AppLayout } from '../components/AppLayout';
 import { HiOutlineArrowsUpDown } from 'react-icons/hi2'
-import { getArray, saveArray } from '../utils/storage';
 import LazyImage from '../components/LazyImage';
 import { useTranslation } from 'react-i18next';
 import { getInterfaceLanguage } from '../utils/settings';
@@ -77,13 +76,9 @@ export const Manga = () => {
 
     const saveManga = () => {
         if (mangaSaved) {
-            // setSavedMangas(savedMangas.filter((e) => e !== manga));
-            // saveArray(consts.MANGA_SAVED_KEY, savedMangas.filter((e) => e !== manga));
-            Data.instance.removeMangaSaved(manga);
+            Data.instance.removeMangaSaved(manga).then(() => {}).catch(() => {});
         } else {
-            // setSavedMangas([manga, ...savedMangas]);
-            // saveArray(consts.MANGA_SAVED_KEY, [manga, ...savedMangas])
-            Data.instance.addMangaSaved(manga);
+            Data.instance.addMangaSaved(manga).then(() => {}).catch(() => {});
         }
         setSavedMangas(Data.instance.getSaved());
         setMangaSaved(old => !old);

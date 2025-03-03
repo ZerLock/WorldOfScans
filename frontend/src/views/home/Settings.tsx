@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, Heading, Input, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, IconButton, Input, InputGroup, InputRightElement, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
 import { Switch } from "../../components/Switch";
 import { useEffect, useState } from "react";
 import { defaultSettings, getSettings, saveSettings, Settings as TSettings } from "../../utils/settings";
@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Select } from "../../components/Select";
 import { Data } from "../../utils/data";
 import { GlobalModal } from "../../components/GlobalModal";
+import { IoMdClipboard } from "react-icons/io";
 
 export const Settings = () => {
     const { t, i18n } = useTranslation<'translation'>();
@@ -19,7 +20,6 @@ export const Settings = () => {
     const { isOpen: isOpenInformations, onOpen: onOpenInformations, onClose: onCloseInformations } = useDisclosure();
     const { isOpen: isOpenId, onOpen: onOpenId, onClose: onCloseId } = useDisclosure();
     const [developer, setDeveloper] = useState<boolean>(false);
-    // const [informations, setInformations] = useState<boolean>(false);
 
     useEffect(() => {
         setId(Data.instance.getId())
@@ -50,24 +50,15 @@ export const Settings = () => {
         i18n.changeLanguage('fr');
     };
 
-    const clearHistory = () => {
-        return;
-        // localStorage.setItem(consts.HISTORY_KEY, [] as any);
-        // toast({
-        //     title: t('toast.history'),
-        //     position: 'top',
-        //     duration: 1500,
-        // });
-    };
-
     const clearCache = () => {
-        // localStorage.clear();
-        // resetSettings(false);
-        // toast({
-        //     title: t('toast.cache'),
-        //     position: 'top',
-        //     duration: 1500,
-        // });
+        localStorage.clear();
+        resetSettings(false);
+        Data.instance.sync();
+        toast({
+            title: t('toast.cache'),
+            position: 'top',
+            duration: 1500,
+        });
     };
 
     const installAppPwa = () => {
@@ -102,14 +93,13 @@ export const Settings = () => {
                         <Collapse in={developer} animateOpacity style={{ width: '100%' }}>
                             <VStack gap="16px">
                                 <Button fontSize="14px" colorScheme="red" variant="outline" w="100%" onClick={() => resetSettings()}>{t('settings.reset_settings')}</Button>
-                                <Button fontSize="14px" colorScheme="red" variant="outline" w="100%" onClick={clearHistory}>{t('settings.clear_history')}</Button>
                                 <Button fontSize="14px" colorScheme="red" w="100%" onClick={clearCache}>{t('settings.clear_cache')}</Button>
                             </VStack>
                         </Collapse>
                     </VStack>
                 </Box>
                 <VStack gap={4}>
-                    <Button fontSize="14px" colorScheme="blue" w="100%" onClick={onOpenId}>{t('settings.id')} ({Data.instance.getId()})</Button>
+                    <Button fontSize="14px" colorScheme="blue" w="100%" onClick={onOpenId}>{t('settings.id')}</Button>
                     <Button fontSize="14px" colorScheme="blue" w="100%" onClick={installAppPwa}>{t('settings.install_app')}</Button>
                     <Button fontSize="14px" colorScheme="blue" variant="outline" w="100%" onClick={onOpenInformations}>{t('informations')}</Button>
                 </VStack>
@@ -123,8 +113,9 @@ export const Settings = () => {
             </GlobalModal>
             <GlobalModal title={t('settings.id')} isOpen={isOpenId} onClose={onCloseIdModal}>
                 <VStack gap={4}>
+                    <Text>{t('settings.id_explained')}</Text>
                     <FormControl isInvalid={id.length === 0}>
-                        <Input placeholder="Data ID" value={id} onChange={(e) => setId(e.target.value)} />
+                        <Input fontSize="14px" placeholder="Data ID" value={id} onChange={(e) => setId(e.target.value)} />
                         {id.length === 0 && <>
                             <FormErrorMessage>
                                 {t('settings.clear_id')}

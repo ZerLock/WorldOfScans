@@ -12,7 +12,8 @@
         "profit_title": "No profit",
         "profit_desc": "This application is completely free, without ads or in-app purchases. No revenue is generated through this site, which has a purely non-commercial purpose",
         "open_source_project": "Open Source project",
-        "id": "Unique ID",
+        "id": "Manage synchronization",
+        "id_explained": "The unique ID allows you to synchronize your devices. Enter the same ID on several of your devices to retrieve your favorite manga, chapter progress and history",
         "id_changed": "The unique ID has been changed, data has been synced",
         "clear_id": "Leaving this field empty will generate a new ID when saving"
     },

@@ -12,7 +12,8 @@
         "profit_title": "Aucun but lucratif",
         "profit_desc": "Cette application est entièrement gratuite, sans publicités ni achats intégrés. Aucun revenu n'est généré par le biais de ce site, qui a un objectif purement non-commercial",
         "open_source_project": "Projet Open Source",
-        "id": "ID unique",
+        "id": "Gérer la syncrhonisation",
+        "id_explained": "L'ID unique permet de synchroniser vos appareils. Renseignez le même ID sur plusieurs de vos appareils pour récupérer vos mangas favoris, votre avancement de chapitres, ainsi que votre historique",
         "id_changed": "L'ID unique a été modifié, les données ont été synchronisé",
         "clear_id": "Laisser ce champ vide génèrera un nouvel ID lors de la sauvegarde"
     },

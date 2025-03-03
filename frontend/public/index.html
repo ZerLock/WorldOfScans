@@ -46,11 +46,30 @@
         body {
         -ms-overflow-style: none;
         }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+        }
+
+        .reset-margin {
+            margin-top: 0px;
+        }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+        <div class="loading">
+            <img src="logo512.png" width="150px" />
+            <h1 class="reset-margin">World of Scans</h1>
+            <p class="reset-margin">loading...</p>
+        </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

@@ -27,7 +27,6 @@ export const Reader = () => {
             setNbPages(nbPages);
         };
 
-        // localStorage.setItem(utils.keys.chapterKeeperKey(manga), chapter.toString());
         bootstrap();
     }, [manga, chapter, nbChapters, navigate]);
 
