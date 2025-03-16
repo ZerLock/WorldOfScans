@@ -29,4 +29,8 @@ export class EngineContext {
   ): Promise<number> {
     return EngineContext.engine.getNbPagesInChapter(manga, chapter);
   }
+
+  static getNbPagesInChapterSync(manga: string, chapter: number): number {
+    return EngineContext.engine.getNbPagesInChapterSync(manga, chapter);
+  }
 }

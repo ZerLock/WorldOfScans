@@ -2,7 +2,7 @@ import { Engine } from "./Engine";
 import axios from "axios";
 
 interface Chapters {
-  [key: string]: string[];
+  [key: string]: string[] | number;
 }
 
 interface CacheChapters {
@@ -64,22 +64,38 @@ export class AnimeSamaEngine implements Engine {
 
       if (line.startsWith("var eps")) {
         if (currentEpisode !== null) {
-          response[currentEpisode] = currentURLs;
+          response[currentEpisode] =
+            currentURLs.length > 0
+              ? currentURLs
+              : Array.from(
+                  { length: Number(response[currentEpisode]) },
+                  (_, i) => (i + 1).toString()
+                );
         }
 
         const episodeMatch = line.match(/eps(\d+)/);
         if (episodeMatch) {
           currentEpisode = parseInt(episodeMatch[1]);
+          currentURLs = [];
         }
-        currentURLs = [];
       } else if (line.startsWith("'https://")) {
         const url: string = line.replace(/['",]/g, "");
         currentURLs.push(url);
+      } else {
+        const lengthMatch = line.match(/length\s*=\s*(\d+)/);
+        if (lengthMatch && currentEpisode !== null) {
+          response[currentEpisode] = parseInt(lengthMatch[1]); // On stocke temporairement la longueur
+        }
       }
     });
 
     if (currentEpisode !== null) {
-      response[currentEpisode] = currentURLs;
+      response[currentEpisode] =
+        currentURLs.length > 0
+          ? currentURLs
+          : Array.from({ length: response[currentEpisode] as number }, (_, i) =>
+              (i + 1).toString()
+            );
     }
 
     return response;
@@ -121,6 +137,17 @@ export class AnimeSamaEngine implements Engine {
 
   async getNbPagesInChapter(manga: string, chapter: number): Promise<number> {
     const chapters = await this.fetchMangaData(manga);
+    //@ts-ignore
     return !!chapters ? chapters[chapter].length : 0;
+  }
+
+  getNbPagesInChapterSync(manga: string, chapter: number): number {
+    const cache = this.mangas[manga];
+    console.log("cache", cache);
+    if (!cache || !this.isCacheValid(cache.date)) {
+      return 0;
+    }
+    //@ts-ignore
+    return cache.chapters[chapter].length || 0;
   }
 }

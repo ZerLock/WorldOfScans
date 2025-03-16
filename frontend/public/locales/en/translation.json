@@ -54,5 +54,6 @@
     "last": "last ",
     "start_manga": "Start the manga",
     "continue_manga": "Continue at chapter",
-    "save": "Save"
+    "save": "Save",
+    "scroll_top": "Go back to top of page"
 }

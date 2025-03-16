@@ -3,11 +3,13 @@ import consts from "./consts";
 export interface Settings {
   displayInstallationPopup: boolean;
   lang: "en" | "fr";
+  chaptersDisplay: "list" | "grid";
 }
 
 export const defaultSettings = (): Settings => ({
   displayInstallationPopup: true,
   lang: "fr",
+  chaptersDisplay: "list",
 });
 
 export const getSettings = (): Settings => {
@@ -22,4 +24,9 @@ export const saveSettings = (settings: Settings) => {
 export const getInterfaceLanguage = (): string => {
   const settings = getSettings();
   return settings.lang || "fr";
+};
+
+export const getChaptersDisplay = (): string => {
+  const settings = getSettings();
+  return settings.chaptersDisplay || "list";
 };

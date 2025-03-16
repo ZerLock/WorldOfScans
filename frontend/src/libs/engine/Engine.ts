@@ -36,4 +36,13 @@ export interface Engine {
    * @returns number of pages in a chapter (0 if chapter does not exists)
    */
   getNbPagesInChapter(manga: string, chapter: number): Promise<number>;
+
+  /**
+   * @brief Use engine local cache to provide a non-async method
+   *
+   * @param manga manga name
+   * @param chapter chapter number
+   * @returns number of pages in a chapter (0 if chapter does not exists)
+   */
+  getNbPagesInChapterSync(manga: string, chapter: number): number;
 }

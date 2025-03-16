@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, IconButton, Input, InputGroup, InputRightElement, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, Input, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react";
 import { Switch } from "../../components/Switch";
 import { useEffect, useState } from "react";
 import { defaultSettings, getSettings, saveSettings, Settings as TSettings } from "../../utils/settings";
@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { Select } from "../../components/Select";
 import { Data } from "../../utils/data";
 import { GlobalModal } from "../../components/GlobalModal";
-import { IoMdClipboard } from "react-icons/io";
 
 export const Settings = () => {
     const { t, i18n } = useTranslation<'translation'>();

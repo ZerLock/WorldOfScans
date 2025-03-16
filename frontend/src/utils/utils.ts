@@ -97,6 +97,10 @@ const utils = {
           return chapter;
       }
     },
+    padNumber: (num: number, maxValue: number): string => {
+      const maxDigits = maxValue.toString().length;
+      return num.toString().padStart(maxDigits, "0");
+    },
   },
 };
 

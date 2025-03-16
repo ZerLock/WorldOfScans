@@ -1,16 +1,16 @@
-import { Box, Text, Image as CImage, HStack, VStack, IconButton, Button, SimpleGrid, Spinner } from '@chakra-ui/react';
+import { Box, Text, Image as CImage, HStack, VStack, IconButton, Button, SimpleGrid, Spinner, List, Divider } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngineContext } from '../libs/engine/EngineContext';
 import { useEffect, useMemo, useState } from 'react';
 import utils from '../utils/utils';
-import { IoArrowBack, IoHeart, IoHeartOutline } from 'react-icons/io5';
+import { IoArrowBack, IoArrowUpOutline, IoGridOutline, IoHeart, IoHeartOutline, IoList } from 'react-icons/io5';
 import { TruncatedText } from '../components/TruncatedText';
 import consts from '../utils/consts';
 import { AppLayout } from '../components/AppLayout';
 import { HiOutlineArrowsUpDown } from 'react-icons/hi2'
 import LazyImage from '../components/LazyImage';
 import { useTranslation } from 'react-i18next';
-import { getInterfaceLanguage } from '../utils/settings';
+import { getChaptersDisplay, getInterfaceLanguage, getSettings, saveSettings } from '../utils/settings';
 import { Data } from '../utils/data';
 
 export const Manga = () => {
@@ -26,6 +26,7 @@ export const Manga = () => {
     const [lastChapter, setLastChapter] = useState(1);
     const [nbChapters, setNbChapters] = useState(0);
     const [reverseOrder, setReverseOrder] = useState(false);
+    const [display, setDisplay] = useState('list');
 
     const handleScroll = () => {
         const scrollPosition = window.scrollY;
@@ -49,6 +50,8 @@ export const Manga = () => {
             const saved = Data.instance.getSaved();
             setSavedMangas(saved);
             setMangaSaved(saved.includes(manga));
+
+            setDisplay(getChaptersDisplay());
 
             setLastChapter(Data.instance.getRead(manga));
 
@@ -86,6 +89,12 @@ export const Manga = () => {
 
     const continueAtLastChapter = () => {
         navigate(`/manga/${manga}/chapter/${lastChapter}`);
+    };
+
+    const changeDisplay = () => {
+        const settings = getSettings();
+        saveSettings({ ...settings, chaptersDisplay: display === 'list' ? 'grid' : 'list' });
+        setDisplay(old => old === 'list' ? 'grid' : 'list');
     };
 
     const chaptersArray = useMemo(() => {
@@ -132,30 +141,57 @@ export const Manga = () => {
                         <Button onClick={continueAtLastChapter} bgColor={`rgb(${lightBgColor})`} _hover={{ backgroundColor: `rgb(${lightBgColor})` }} color="white" w="100%">{lastChapter === 1 ? t('start_manga') : `${t('continue_manga')} ${utils.chapters.chapterNumber(manga, lastChapter)}`}</Button>
                         <HStack px="5px" py="10px" w="100%" justify="space-between" align="center">
                             <Text fontSize="14px" fontWeight={900}>{nbChapters} {t('chapters').toLowerCase()}</Text>
-                            <HStack onClick={reverseChaptersOrder} _hover={{cursor: 'pointer'}} align="center" gap={1}>
-                                <HiOutlineArrowsUpDown />
-                                <Text>{reverseOrder ? t('first') : t('last')}</Text>
+                            <HStack align="center" gap={4}>
+                                <HStack onClick={changeDisplay} _hover={{cursor: 'pointer'}} align="center" gap={1}>
+                                    {display === 'grid' ? <IoGridOutline /> : <IoList />}
+                                    <Text>{display}</Text>
+                                </HStack>
+                                <HStack onClick={reverseChaptersOrder} _hover={{cursor: 'pointer'}} align="center" gap={1}>
+                                    <HiOutlineArrowsUpDown />
+                                    <Text>{reverseOrder ? t('first') : t('last')}</Text>
+                                </HStack>
                             </HStack>
                         </HStack>
                         {chaptersArray.length === 0 ? <>
                             <Spinner mt="10px" size="lg" />
                         </> : <>
-                            <SimpleGrid mx="10%" w="100%" columns={{ base: 3, md: 4 }} gap={2}>
-                                {chaptersArray.map((chapter) => (
-                                    <Box key={chapter} _hover={{ cursor: 'pointer' }} onClick={() => goToChapter(chapter)}>
-                                        <Box display="inline-block" overflow="hidden" borderRadius={8}>
-                                            <LazyImage
-                                                src={EngineContext.getPageUrl(manga, chapter, 1)}
-                                                style={{
-                                                    objectFit: 'cover',
-                                                    aspectRatio: 4 / 3,
-                                                }}
-                                            />
+                            {display === 'grid' ? <>
+                                <SimpleGrid mx="10%" w="100%" columns={{ base: 3, md: 4 }} gap={2}>
+                                    {chaptersArray.map((chapter) => (
+                                        <Box key={chapter} _hover={{ cursor: 'pointer' }} onClick={() => goToChapter(chapter)}>
+                                            <Box display="inline-block" overflow="hidden" borderRadius={8}>
+                                                <LazyImage
+                                                    src={EngineContext.getPageUrl(manga, chapter, 1)}
+                                                    style={{
+                                                        objectFit: 'cover',
+                                                        aspectRatio: 4 / 3,
+                                                    }}
+                                                />
+                                            </Box>
+                                            <Text fontSize="12px" fontWeight="bold">{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
                                         </Box>
-                                        <Text fontSize="12px" fontWeight="bold">{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
-                                    </Box>
-                                ))}
-                            </SimpleGrid>
+                                    ))}
+                                </SimpleGrid>
+                            </> : <>
+                                <VStack mx="10px" w="100%" gap={0}>
+                                    {chaptersArray.map((chapter, index) => (
+                                        <>
+                                            <HStack w="100%" borderWidth={0} borderRadius={0} py={2} px={1} display="flex" onClick={() => goToChapter(chapter)} _hover={{ cursor: 'pointer', backgroundColor: `rgb(${lightBgColor})` }}>
+                                                <Text flex={1} fontWeight={900} fontSize="32">{utils.chapters.padNumber(chapter, chaptersArray[chaptersArray.length - 1]).toUpperCase()}</Text>
+                                                <VStack flex={5} w="100%" px={2} gap={0}>
+                                                    <Text w="100%" textAlign="left">{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
+                                                    <Text w="100%" fontStyle="italic" textAlign="left" mt={-1} opacity="50%">{EngineContext.getNbPagesInChapterSync(manga, chapter) || '...'} {t('pages')}</Text>
+                                                </VStack>
+                                            </HStack>
+                                            {(chaptersArray.length !== index + 1) && <Divider color="white" w="100%" />}
+                                        </>
+                                    ))}
+                                </VStack>
+                            </>}
+                            <HStack textDecoration="underline" _hover={{cursor: 'pointer'}} align="center" gap={1} onClick={() => window.scrollTo({ top: 0 })}>
+                                <Text>{t('scroll_top')}</Text>
+                                <IoArrowUpOutline />
+                            </HStack>
                         </>}
                     </VStack>
                 </VStack>
