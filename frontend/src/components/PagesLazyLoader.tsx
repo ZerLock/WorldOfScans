@@ -11,70 +11,75 @@ interface LazyLoaderProps {
 }
 
 export const LazyLoader = ({ manga, chapter, nbPages, loadFinished }: LazyLoaderProps) => {
-  const [loadedImages, setLoadedImages] = useState<string[]>([]);
-  const observer = useRef<IntersectionObserver | null>(null);
-  const BATCH_SIZE = 5;
+    const [loadedImages, setLoadedImages] = useState<string[]>([]);
+    const observer = useRef<IntersectionObserver | null>(null);
+    const isLoading = useRef(false);
+    const hasFinishedLoading = useRef(false);
+    const BATCH_SIZE = 5;
 
-  const generateImageUrls = (start: number, count: number): string[] => {
-    return Array.from({ length: count }, (_, i) => EngineContext.getPageUrl(manga, chapter, start + i + 1));
-  };
+    const generateImageUrls = (start: number, count: number): string[] => {
+        return Array.from({ length: count }, (_, i) => EngineContext.getPageUrl(manga, chapter, start + i + 1));
+    };
 
-  const loadNextBatch = useCallback(() => {
-    if (loadedImages.length >= nbPages) {
-        if (nbPages > 0) loadFinished();
-        return;
-    }
+    const loadNextBatch = useCallback(() => {
+        if (isLoading.current || loadedImages.length >= nbPages) return;
 
-    const nextBatch = generateImageUrls(loadedImages.length, Math.min(nbPages - loadedImages.length, BATCH_SIZE));
-    let loadedCount = 0;
+        isLoading.current = true;
+        const nextBatch = generateImageUrls(loadedImages.length, Math.min(nbPages - loadedImages.length, BATCH_SIZE));
+        let loadedCount = 0;
+        const tempLoadedImages: string[] = new Array(nextBatch.length);
 
-    nextBatch.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === nextBatch.length) {
-          setLoadedImages((prev) => [...prev, ...nextBatch]);
-        }
-      };
-      img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === nextBatch.length) {
-          setLoadedImages((prev) => [...prev, ...nextBatch]);
-        }
-      };
-    });
-  }, [loadedImages, nbPages, manga, chapter]);
+        nextBatch.forEach((src, index) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = img.onerror = () => {
+                tempLoadedImages[index] = src;
+                loadedCount++;
 
-  useEffect(() => {
-    loadNextBatch();
-  }, [nbPages, manga, chapter]);
+                if (loadedCount === nextBatch.length) {
+                    setLoadedImages((prev) => {
+                        const newImages = [...prev, ...tempLoadedImages];
+                        if (newImages.length >= nbPages && !hasFinishedLoading.current) {
+                            hasFinishedLoading.current = true;
+                            loadFinished();
+                        }
+                        return newImages;
+                    });
+                    isLoading.current = false;
+                }
+            };
+        });
+    }, [loadedImages, nbPages, manga, chapter, loadFinished]);
 
-  useEffect(() => {
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+    useEffect(() => {
         loadNextBatch();
-      }
-    }, { rootMargin: '500px' });
+    }, [nbPages, manga, chapter]);
 
-    const images = document.querySelectorAll("#pages-container img");
-    const lastImage = images[images.length - 1];
+    useEffect(() => {
+        if (observer.current) observer.current.disconnect();
 
-    if (lastImage) observer.current.observe(lastImage);
+        observer.current = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                loadNextBatch();
+            }
+        }, { rootMargin: '500px' });
 
-    return () => observer.current?.disconnect();
-  }, [loadedImages, loadNextBatch]);
+        const images = document.querySelectorAll("#pages-container img");
+        const lastImage = images[images.length - 1];
 
-  return (
-    <>
-        {loadedImages.length === 0 && <Spinner mt="100px" size="xl" />}
-        <div id="pages-container" className="grid grid-cols-2 gap-4 p-4">
-        {loadedImages.map((src, index) => (
-            <LazyImage key={index} src={src} style={{ width: '100%' }} />
-        ))}
-        </div>
-    </>
-  );
+        if (lastImage) observer.current.observe(lastImage);
+
+        return () => observer.current?.disconnect();
+    }, [loadedImages, loadNextBatch]);
+
+    return (
+        <>
+            {loadedImages.length === 0 && <Spinner mt="100px" size="xl" />}
+            <div id="pages-container" className="grid grid-cols-2 gap-4 p-4">
+                {loadedImages.map((src, index) => (
+                    <LazyImage key={index} src={src} style={{ width: '100%' }} />
+                ))}
+            </div>
+        </>
+    );
 };
