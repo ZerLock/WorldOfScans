@@ -55,5 +55,6 @@
     "start_manga": "Start the manga",
     "continue_manga": "Continue at chapter",
     "save": "Save",
-    "scroll_top": "Go back to top of page"
+    "scroll_top": "Go back to top of page",
+    "pages": "pages"
 }

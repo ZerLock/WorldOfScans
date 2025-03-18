@@ -32,8 +32,7 @@
         },
         "empty": {
             "history": "Vous n'avez pas encore d'historique",
-            "trending": "",
-            "discover": ""
+            "broken": "Il semblerait que quelque chose soit cassé ici 🤔"
         }
     },
     "scans": {
@@ -56,5 +55,6 @@
     "start_manga": "Commencer le manga",
     "continue_manga": "Continuer le chapitre",
     "save": "Sauvegarder",
-    "scroll_top": "Retour en haut de page"
+    "scroll_top": "Retour en haut de page",
+    "pages": "pages"
 }

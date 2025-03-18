@@ -62,7 +62,8 @@ export class AnimeSamaEngine implements Engine {
     lines.forEach((line: string) => {
       line = line.trim();
 
-      if (line.startsWith("var eps")) {
+      const episodeMatch = line.match(/var\s+eps(\d+)\s*=/);
+      if (episodeMatch) {
         if (currentEpisode !== null) {
           response[currentEpisode] =
             currentURLs.length > 0
@@ -73,18 +74,15 @@ export class AnimeSamaEngine implements Engine {
                 );
         }
 
-        const episodeMatch = line.match(/eps(\d+)/);
-        if (episodeMatch) {
-          currentEpisode = parseInt(episodeMatch[1]);
-          currentURLs = [];
-        }
+        currentEpisode = parseInt(episodeMatch[1]);
+        currentURLs = [];
       } else if (line.startsWith("'https://")) {
         const url: string = line.replace(/['",]/g, "");
         currentURLs.push(url);
       } else {
         const lengthMatch = line.match(/length\s*=\s*(\d+)/);
         if (lengthMatch && currentEpisode !== null) {
-          response[currentEpisode] = parseInt(lengthMatch[1]); // On stocke temporairement la longueur
+          response[currentEpisode] = parseInt(lengthMatch[1]);
         }
       }
     });
@@ -143,7 +141,6 @@ export class AnimeSamaEngine implements Engine {
 
   getNbPagesInChapterSync(manga: string, chapter: number): number {
     const cache = this.mangas[manga];
-    console.log("cache", cache);
     if (!cache || !this.isCacheValid(cache.date)) {
       return 0;
     }

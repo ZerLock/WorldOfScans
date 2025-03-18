@@ -175,8 +175,8 @@ export const Manga = () => {
                             </> : <>
                                 <VStack mx="10px" w="100%" gap={0}>
                                     {chaptersArray.map((chapter, index) => (
-                                        <>
-                                            <HStack w="100%" borderWidth={0} borderRadius={0} py={2} px={1} display="flex" onClick={() => goToChapter(chapter)} _hover={{ cursor: 'pointer', backgroundColor: `rgb(${lightBgColor})` }}>
+                                        <Box key={chapter} w="100%">
+                                            <HStack key={chapter} w="100%" borderWidth={0} borderRadius={0} py={2} px={1} display="flex" onClick={() => goToChapter(chapter)} _hover={{ cursor: 'pointer', backgroundColor: `rgb(${lightBgColor})` }}>
                                                 <Text flex={1} fontWeight={900} fontSize="32">{utils.chapters.padNumber(chapter, chaptersArray[chaptersArray.length - 1]).toUpperCase()}</Text>
                                                 <VStack flex={5} w="100%" px={2} gap={0}>
                                                     <Text w="100%" textAlign="left">{t('chapter')} {utils.chapters.chapterNumber(manga, chapter)}</Text>
@@ -184,7 +184,7 @@ export const Manga = () => {
                                                 </VStack>
                                             </HStack>
                                             {(chaptersArray.length !== index + 1) && <Divider color="white" w="100%" />}
-                                        </>
+                                        </Box>
                                     ))}
                                 </VStack>
                             </>}

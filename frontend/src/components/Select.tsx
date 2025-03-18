@@ -11,8 +11,8 @@ export const Select = ({ text, value, values, onChange }: SelectProps) => (
     <HStack w="100%" align="center" justify="space-between">
         <Text fontSize="16px">{text}</Text>
         <CSelect fontSize="16px" w="auto" value={value} onChange={(e) => onChange(e.target.value as 'en' | 'fr')}>
-            {values.map((value) => (
-                <option value={value}>{value.toUpperCase()}</option>
+            {values.map((value, index) => (
+                <option key={index} value={value}>{value.toUpperCase()}</option>
             ))}
         </CSelect>
     </HStack>
