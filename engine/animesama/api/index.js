@@ -11,7 +11,8 @@ function sanitizeMangaName(mangaName) {
 }
 
 app.get('/manga/:mangaName/chapters', async (req, res) => {
-    const mangaName = req.params.mangaName;
+    let mangaName = req.params.mangaName;
+    if (mangaName === "one-piece") mangaName = "one-piece/scan_noir-et-blanc";
     const url = `https://anime-sama.fr/catalogue/${sanitizeMangaName(mangaName)}/scan/vf/episodes.js`;
 
     try {
