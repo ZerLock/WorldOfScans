@@ -10,10 +10,15 @@ function sanitizeMangaName(mangaName) {
     return mangaName.replaceAll('%20', '-').replaceAll(' ', '-').toLowerCase();
 }
 
+const BLACK_AND_WHITE = ['one-piece'];
+
+function typeOfScans(mangaName) {
+    return BLACK_AND_WHITE.includes(mangaName) ? 'scan_noir-et-blanc' : 'scan';
+}
+
 app.get('/manga/:mangaName/chapters', async (req, res) => {
-    let mangaName = req.params.mangaName;
-    if (mangaName === "one-piece") mangaName = "one-piece/scan_noir-et-blanc";
-    const url = `https://anime-sama.fr/catalogue/${sanitizeMangaName(mangaName)}/scan/vf/episodes.js`;
+    const mangaName = req.params.mangaName;
+    const url = `https://anime-sama.fr/catalogue/${sanitizeMangaName(mangaName)}/${typeOfScans(mangaName)}/vf/episodes.js`;
 
     try {
         const response = await axios.get(url);
