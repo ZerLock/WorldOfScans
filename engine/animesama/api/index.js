@@ -40,8 +40,10 @@ async function isValidChapter(manga, chapter) {
     try {
         const url = `https://anime-sama.fr/s2/scans/${manga}/${chapter}/1.jpg`;
         const res = await axios.get(url);
+        console.log(res);
         return res.status !== 404 && res.status !== 403;
     } catch (e) {
+        console.error(e);
         return false;
     }
 }
