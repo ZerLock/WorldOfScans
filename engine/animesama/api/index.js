@@ -36,4 +36,34 @@ app.get('/manga/:mangaName/chapters', async (req, res) => {
     }
 });
 
+async function isValidChapter(manga, chapter) {
+    try {
+        const url = `https://anime-sama.fr/s2/scans/${manga}/${chapter}/1.jpg`;
+        const res = await axios.get(url);
+        return res.status !== 404 && res.status !== 403;
+    } catch (e) {
+        return false;
+    }
+}
+
+app.get('/v2/manga/:mangaName/chapters', async (req, res) => {
+    const mangaName = req.params.mangaName;
+
+    let low = 1;
+    let high = 1300;
+    let lastValid = null;
+
+    while (low <= high) {
+        const middle = Math.floor((low + high) / 2);
+        if (await isValidChapter(mangaName, middle)) {
+            lastValid = middle;
+            low = middle + 1;
+        } else {
+            high = middle - 1;
+        }
+    }
+
+    res.json({ count: lastValid || 0 });
+});
+
 module.exports = app;
