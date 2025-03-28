@@ -1,13 +1,8 @@
 import { Engine } from "./Engine";
-import axios from "axios";
-
-interface Chapters {
-  [key: string]: string[] | number;
-}
 
 interface CacheChapters {
   date: Date;
-  chapters: Chapters;
+  chapters: number;
 }
 
 interface Mangas {
@@ -19,8 +14,6 @@ export class AnimeSamaEngine implements Engine {
     "https://anime-sama.fr/s2/scans/$MANGA/$CHAPTER/$PAGE_NUMBER.jpg";
   private readonly coverBaseUrl: string =
     "https://cdn.statically.io/gh/Anime-Sama/IMG/img/contenu/$MANGA.jpg";
-
-  private readonly serverBaseUrl = "https://wos-animesama-engine.vercel.app";
 
   private mangas: Mangas = {};
 
@@ -51,54 +44,6 @@ export class AnimeSamaEngine implements Engine {
       .replace("$PAGE_NUMBER", page.toString());
   }
 
-  private parseMangaDataToChapters(data: string): Chapters {
-    const response: Chapters = {};
-
-    const lines: string[] = data.split("\n");
-
-    let currentEpisode: number | null = null;
-    let currentURLs: string[] = [];
-
-    lines.forEach((line: string) => {
-      line = line.trim();
-
-      const episodeMatch = line.match(/var\s+eps(\d+)\s*=/);
-      if (episodeMatch) {
-        if (currentEpisode !== null) {
-          response[currentEpisode] =
-            currentURLs.length > 0
-              ? currentURLs
-              : Array.from(
-                  { length: Number(response[currentEpisode]) },
-                  (_, i) => (i + 1).toString()
-                );
-        }
-
-        currentEpisode = parseInt(episodeMatch[1]);
-        currentURLs = [];
-      } else if (line.startsWith("'https://")) {
-        const url: string = line.replace(/['",]/g, "");
-        currentURLs.push(url);
-      } else {
-        const lengthMatch = line.match(/length\s*=\s*(\d+)/);
-        if (lengthMatch && currentEpisode !== null) {
-          response[currentEpisode] = parseInt(lengthMatch[1]);
-        }
-      }
-    });
-
-    if (currentEpisode !== null) {
-      response[currentEpisode] =
-        currentURLs.length > 0
-          ? currentURLs
-          : Array.from({ length: response[currentEpisode] as number }, (_, i) =>
-              (i + 1).toString()
-            );
-    }
-
-    return response;
-  }
-
   private isCacheValid(date: Date): boolean {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
@@ -107,44 +52,52 @@ export class AnimeSamaEngine implements Engine {
     return diffMs < oneDayMs;
   }
 
-  private async fetchMangaData(manga: string): Promise<Chapters | null> {
+  private async isChapterValid(
+    manga: string,
+    chapter: number
+  ): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = this.getPageUrl(manga, chapter, 1);
+
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+    });
+  }
+
+  async getNbChapters(manga: string): Promise<number> {
     const cache = this.mangas[manga];
     if (cache && this.isCacheValid(cache.date)) {
       return cache.chapters;
     }
 
-    try {
-      const response = await axios.get(
-        `${this.serverBaseUrl}/manga/${this.encodeToUrl(manga)}/chapters`
-      );
-      const chapters = this.parseMangaDataToChapters(response.data);
-      this.mangas[manga] = { date: new Date(), chapters };
-      return chapters;
-    } catch (err) {
-      console.error(
-        `An error occured while fetching manga data : ${JSON.stringify(err)}`
-      );
-      return null;
-    }
-  }
+    let low = 1;
+    let high = 1300;
+    let lastValid: number | null = null;
 
-  async getNbChapters(manga: string): Promise<number> {
-    const chapters = await this.fetchMangaData(manga);
-    return Object.keys(chapters || []).length;
+    while (low <= high) {
+      const middle = Math.floor((low + high) / 2);
+      if (await this.isChapterValid(manga, middle)) {
+        lastValid = middle;
+        low = middle + 1;
+      } else {
+        high = middle - 1;
+      }
+    }
+
+    if (lastValid === null) {
+      return 1;
+    }
+
+    this.mangas[manga] = { date: new Date(), chapters: lastValid };
+    return lastValid;
   }
 
   async getNbPagesInChapter(manga: string, chapter: number): Promise<number> {
-    const chapters = await this.fetchMangaData(manga);
-    //@ts-ignore
-    return !!chapters ? chapters[chapter].length : 0;
+    return 0;
   }
 
   getNbPagesInChapterSync(manga: string, chapter: number): number {
-    const cache = this.mangas[manga];
-    if (!cache || !this.isCacheValid(cache.date)) {
-      return 0;
-    }
-    //@ts-ignore
-    return cache.chapters[chapter].length || 0;
+    return 0;
   }
 }
