@@ -107,7 +107,7 @@ export const Settings = () => {
                 <VStack gap={4}>
                     <li><b>{t('settings.images_sources_title')}:</b><br />{t('settings.images_sources_desc')}</li>
                     <li><b>{t('settings.profit_title')}:</b><br />{t('settings.profit_desc')}</li>
-                    <li style={{ width: '100%' }}><b>{t('settings.open_source_project')}:</b><br /><a style={{ color: 'blue' }} href="https://github.com/ZerLock/WorldOfScans" target="_blank" rel="noreferrer" >https://github.com/ZerLock/WorldOfScans</a></li>
+                    <li style={{ width: '100%' }}><b>{t('settings.open_source_project')}:</b><br /><a style={{ color: 'blue' }} href="https://github.com/leodubosclard/WorldOfScans" target="_blank" rel="noreferrer" >https://github.com/ZerLock/WorldOfScans</a></li>
                 </VStack>
             </GlobalModal>
             <GlobalModal title={t('settings.id')} isOpen={isOpenId} onClose={onCloseIdModal}>
